@@ -26,9 +26,10 @@ type BlogPost = {
 interface PostsPageProps {
   onCreateNew: () => void;
   onEditPost: (post: BlogPost) => void;
+  refreshKey?: number;
 }
 
-export default function PostsPage({ onCreateNew, onEditPost }: PostsPageProps) {
+export default function PostsPage({ onCreateNew, onEditPost, refreshKey }: PostsPageProps) {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,7 +61,7 @@ export default function PostsPage({ onCreateNew, onEditPost }: PostsPageProps) {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [refreshKey]);
 
   const handleDelete = async (post: BlogPost) => {
     const ok = window.confirm(`Delete post "${post.title}"? This cannot be undone.`);
@@ -201,4 +202,3 @@ export default function PostsPage({ onCreateNew, onEditPost }: PostsPageProps) {
     </div>
   );
 }
-

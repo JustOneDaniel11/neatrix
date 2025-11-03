@@ -151,6 +151,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
+  const [postsRefreshKey, setPostsRefreshKey] = useState<number>(0);
   const [showPostEditor, setShowPostEditor] = useState(false);
   const [editingPost, setEditingPost] = useState<any | null>(null);
   const TAB_ROUTES: Record<string, string> = {
@@ -3229,12 +3230,18 @@ export default function AdminDashboard() {
           <PostEditor
             post={editingPost}
             onClose={() => { setShowPostEditor(false); setEditingPost(null); }}
-            onSaved={() => { setShowPostEditor(false); setEditingPost(null); }}
+            onSaved={() => {
+              // Close editor and trigger posts list refresh
+              setShowPostEditor(false);
+              setEditingPost(null);
+              setPostsRefreshKey(Date.now());
+            }}
           />
         ) : (
           <PostsPage
             onCreateNew={() => { setEditingPost(null); setShowPostEditor(true); }}
             onEditPost={(post) => { setEditingPost(post); setShowPostEditor(true); }}
+            refreshKey={postsRefreshKey}
           />
         ))}
         {activeTab === 'livechat' && <IntegratedLiveChat />}
