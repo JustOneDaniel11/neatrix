@@ -1,9 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from './supabase';
 
 /**
  * Sign in with Google OAuth
@@ -13,12 +8,27 @@ export const signInWithGoogle = async () => {
   return await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
       queryParams: {
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         access_type: 'offline',
         prompt: 'consent',
       },
-      redirectTo: `${window.location.origin}/auth/callback`,
     },
   });
+};
+
+/**
+ * Get the current session
+ * @returns Promise with the current session
+ */
+export const getSession = async () => {
+  return await supabase.auth.getSession();
+};
+
+/**
+ * Sign out the current user
+ * @returns Promise with the sign out result
+ */
+export const signOut = async () => {
+  return await supabase.auth.signOut();
 };

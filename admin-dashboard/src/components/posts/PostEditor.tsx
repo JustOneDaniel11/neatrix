@@ -353,7 +353,7 @@ export default function PostEditor({ post, onClose, onSaved }: PostEditorProps) 
                   <button onClick={() => applyAlignment('left')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700" title="Align Left"><AlignLeft className="w-4 h-4" /></button>
                   <button onClick={() => applyAlignment('center')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700" title="Align Center"><AlignCenter className="w-4 h-4" /></button>
                   <button onClick={() => applyAlignment('right')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700" title="Align Right"><AlignRight className="w-4 h-4" /></button>
-                  <button onClick={() => applyAlignment('justify')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700" title="Justify"><AlignJustify className="w-4 h-4" /></button>
+                  <button onClick={() => applyAlignment('full')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700" title="Justify"><AlignJustify className="w-4 h-4" /></button>
                   <div className="border-r border-gray-300 dark:border-gray-600 mx-1 h-6"></div>
                   <button onClick={() => applyFormat('blockquote')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700" title="Blockquote"><Quote className="w-4 h-4" /></button>
                   <button onClick={() => applyFormat('ul')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700" title="Bullet List"><List className="w-4 h-4" /></button>
@@ -389,7 +389,7 @@ export default function PostEditor({ post, onClose, onSaved }: PostEditorProps) 
                   <button onClick={() => applyAlignment('left')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 touch-manipulation" title="Align Left"><AlignLeft className="w-4 h-4" /></button>
                   <button onClick={() => applyAlignment('center')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 touch-manipulation" title="Align Center"><AlignCenter className="w-4 h-4" /></button>
                   <button onClick={() => applyAlignment('right')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 touch-manipulation" title="Align Right"><AlignRight className="w-4 h-4" /></button>
-                  <button onClick={() => applyAlignment('justify')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 touch-manipulation" title="Justify"><AlignJustify className="w-4 h-4" /></button>
+                  <button onClick={() => applyAlignment('full')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 touch-manipulation" title="Justify"><AlignJustify className="w-4 h-4" /></button>
                   <div className="border-r border-gray-300 dark:border-gray-600 mx-1 h-6 hidden sm:block"></div>
                   <button onClick={() => applyFormat('blockquote')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 touch-manipulation" title="Blockquote"><Quote className="w-4 h-4" /></button>
                   <button onClick={() => applyFormat('ul')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 touch-manipulation" title="Bullet List"><List className="w-4 h-4" /></button>
@@ -519,107 +519,4 @@ export default function PostEditor({ post, onClose, onSaved }: PostEditorProps) 
   );
 }
 
-const applyFormat = (format: string) => {
-  if (editorMode === 'code') {
-    const textarea = contentRef.current;
-    if (!textarea) return;
-    
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = content.substring(start, end);
-    
-    let formattedText = '';
-    switch (format) {
-      case 'strong':
-        formattedText = `<strong>${selectedText}</strong>`;
-        break;
-      case 'em':
-        formattedText = `<em>${selectedText}</em>`;
-        break;
-      case 'blockquote':
-        formattedText = `<blockquote>${selectedText}</blockquote>`;
-        break;
-      case 'ul':
-        formattedText = `<ul><li>${selectedText}</li></ul>`;
-        break;
-      case 'p':
-        formattedText = `<p>${selectedText}</p>`;
-        break;
-      default:
-        formattedText = selectedText;
-    }
-    
-    const newContent = content.substring(0, start) + formattedText + content.substring(end);
-    setContent(newContent);
-    
-    // Restore cursor position
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + formattedText.length, start + formattedText.length);
-    }, 0);
-  } else {
-    // Visual editor formatting
-    const editor = visualEditorRef.current;
-    if (!editor) return;
-    
-    document.execCommand(format, false, null);
-    handleVisualContentChange(editor.innerHTML);
-  }
-};
-
-const applyHeading = (level: number) => {
-  if (editorMode === 'code') {
-    const textarea = contentRef.current;
-    if (!textarea) return;
-    
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = content.substring(start, end);
-    
-    const formattedText = `<h${level}>${selectedText}</h${level}>`;
-    const newContent = content.substring(0, start) + formattedText + content.substring(end);
-    setContent(newContent);
-    
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + formattedText.length, start + formattedText.length);
-    }, 0);
-  } else {
-    const editor = visualEditorRef.current;
-    if (!editor) return;
-    
-    document.execCommand('formatBlock', false, `h${level}`);
-    handleVisualContentChange(editor.innerHTML);
-  }
-};
-
-const applyAlignment = (alignment: string) => {
-  if (editorMode === 'code') {
-    const textarea = contentRef.current;
-    if (!textarea) return;
-    
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = content.substring(start, end);
-    
-    const formattedText = `<div style="text-align: ${alignment};">${selectedText}</div>`;
-    const newContent = content.substring(0, start) + formattedText + content.substring(end);
-    setContent(newContent);
-    
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + formattedText.length, start + formattedText.length);
-    }, 0);
-  } else {
-    const editor = visualEditorRef.current;
-    if (!editor) return;
-    
-    document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1), false, null);
-    handleVisualContentChange(editor.innerHTML);
-  }
-};
-
-const handleVisualContentChange = (html: string) => {
-  setVisualContent(html);
-  setContent(html); // Keep both editors in sync
-};
+// Remove the standalone functions at the bottom of the file
