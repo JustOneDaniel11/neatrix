@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neatrix Email Templates - Mobile Responsiveness Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .viewport-controls {
+            padding: 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .viewport-btn {
+            padding: 10px 20px;
+            border: 2px solid #6a1b9a;
+            background: white;
+            color: #6a1b9a;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .viewport-btn:hover,
+        .viewport-btn.active {
+            background: #6a1b9a;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+        
+        .template-preview {
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .template-preview:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .template-header {
+            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .template-iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-view .template-iframe {
+            height: 800px;
+        }
+        
+        .tablet-view .template-iframe {
+            height: 700px;
+        }
+        
+        .features-list {
+            padding: 20px;
+            background: #f8fafc;
+            margin: 20px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .features-list h3 {
+            color: #6a1b9a;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .features-list ul {
+            list-style: none;
+        }
+        
+        .features-list li {
+            padding: 8px 0;
+            color: #475569;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .features-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .viewport-controls {
+                padding: 15px;
+            }
+            
+            .viewport-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>📱 Neatrix Email Templates</h1>
+            <p>Mobile Responsiveness & UI Testing Dashboard</p>
+        </div>
+        
+        <div class="viewport-controls">
+            <button class="viewport-btn active" onclick="setViewport('desktop', this)">🖥️ Desktop (1200px)</button>
+            <button class="viewport-btn" onclick="setViewport('tablet', this)">📱 Tablet (768px)</button>
+            <button class="viewport-btn" onclick="setViewport('mobile', this)">📱 Mobile (375px)</button>
+        </div>
+        
+        <div class="features-list">
+            <h3>🎯 Mobile Optimization Features Implemented</h3>
+            <ul>
+                <li>Responsive @media queries for screens ≤ 600px</li>
+                <li>Optimized button sizing and touch targets</li>
+                <li>Improved typography scaling for mobile readability</li>
+                <li>Single-column layouts on small screens</li>
+                <li>Enhanced padding and spacing for mobile UX</li>
+                <li>Absolute logo URLs for reliable email client loading</li>
+                <li>Consistent brand colors and modern UI design</li>
+                <li>Accessible support links with proper styling</li>
+            </ul>
+        </div>
+        
+        <div class="templates-grid" id="templatesGrid">
+            <div class="template-preview">
+                <div class="template-header">
+                    📧 Signup Confirmation
+                </div>
+                <iframe class="template-iframe" src="user-frontend/src/email-templates/neatrix-signup-confirmation.html"></iframe>
+            </div>
+            
+            <div class="template-preview">
+                <div class="template-header">
+                    🔐 Password Reset
+                </div>
+                <iframe class="template-iframe" src="user-frontend/src/email-templates/neatrix-password-reset.html"></iframe>
+            </div>
+            
+            <div class="template-preview">
+                <div class="template-header">
+                    👨‍💼 Admin Password Reset
+                </div>
+                <iframe class="template-iframe" src="user-frontend/src/email-templates/neatrix-admin-password-reset.html"></iframe>
+            </div>
+            
+            <div class="template-preview">
+                <div class="template-header">
+                    🔑 Main Password Reset
+                </div>
+                <iframe class="template-iframe" src="user-frontend/src/email-templates/neatrix-main-password-reset.html"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function setViewport(size, buttonElement = null) {
+            const grid = document.getElementById('templatesGrid');
+            const buttons = document.querySelectorAll('.viewport-btn');
+            
+            // Remove active class from all buttons
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            if (buttonElement) {
+                buttonElement.classList.add('active');
+            } else {
+                // Find the button for this size and activate it
+                buttons.forEach(btn => {
+                    if (btn.textContent.toLowerCase().includes(size)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            
+            // Remove existing viewport classes
+            grid.classList.remove('desktop-view', 'tablet-view', 'mobile-view');
+            
+            // Apply new viewport class
+            grid.classList.add(size + '-view');
+            
+            // Adjust iframe container widths
+            const previews = document.querySelectorAll('.template-preview');
+            
+            switch(size) {
+                case 'mobile':
+                    previews.forEach(preview => {
+                        preview.style.maxWidth = '375px';
+                        preview.style.margin = '0 auto';
+                    });
+                    break;
+                case 'tablet':
+                    previews.forEach(preview => {
+                        preview.style.maxWidth = '768px';
+                        preview.style.margin = '0 auto';
+                    });
+                    break;
+                case 'desktop':
+                default:
+                    previews.forEach(preview => {
+                        preview.style.maxWidth = 'none';
+                        preview.style.margin = '0';
+                    });
+                    break;
+            }
+        }
+        
+        // Initialize with desktop view
+        document.addEventListener('DOMContentLoaded', function() {
+            setViewport('desktop');
+        });
+    </script>
+</body>
+</html>

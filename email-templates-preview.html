@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neatrix Email Templates Preview</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .preview-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .preview-header h1 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        .preview-header p {
+            color: #64748b;
+            font-size: 16px;
+        }
+        .template-section {
+            margin-bottom: 50px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .template-header {
+            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            color: white;
+            padding: 20px 30px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .template-preview {
+            padding: 30px;
+        }
+        .template-iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .template-info {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .template-info h3 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        .template-info ul {
+            color: #64748b;
+            margin: 0;
+            padding-left: 20px;
+        }
+        .template-info li {
+            margin-bottom: 5px;
+        }
+        .url-info {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .url-info strong {
+            color: #1e40af;
+        }
+        .deployment-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+        .deployment-section h2 {
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+        .deployment-steps {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #6a1b9a;
+        }
+        .deployment-steps ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .deployment-steps li {
+            margin-bottom: 10px;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <div class="preview-header">
+            <h1>🧽 Neatrix Email Templates Preview</h1>
+            <p>Professional email templates for signup confirmation and password reset</p>
+        </div>
+
+        <!-- Signup Confirmation Template -->
+        <div class="template-section">
+            <div class="template-header">
+                📧 Signup Confirmation Template
+            </div>
+            <div class="template-preview">
+                <div class="template-info">
+                    <h3>Template Features:</h3>
+                    <ul>
+                        <li>Professional Neatrix branding with gradient design</li>
+                        <li>Responsive layout for all devices</li>
+                        <li>Clear call-to-action button</li>
+                        <li>Service features showcase</li>
+                        <li>Contact information and support links</li>
+                        <li>Security notice and alternative link</li>
+                    </ul>
+                </div>
+                
+                <div class="url-info">
+                    <strong>🔗 URL Configuration:</strong> Uses <code>{{ .ConfirmationURL }}</code> - Supabase will automatically replace this with the actual confirmation link
+                </div>
+
+                <iframe class="template-iframe" src="data:text/html;charset=utf-8,<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Welcome to Neatrix! 🎉 — Confirm your account</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8fafc;
+            line-height: 1.6;
+            color: #334155;
+            padding: 20px 0;
+            -webkit-text-size-adjust: 100%;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            color: #ffffff;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #a855f7, #ec4899, #6a1b9a);
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .brand-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .welcome-message {
+            font-size: 16px;
+            color: #475569;
+            margin-bottom: 32px;
+            text-align: center;
+            line-height: 1.7;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 32px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            min-width: 240px;
+            min-height: 44px;
+            line-height: 1.2;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .feature {
+            text-align: center;
+            padding: 20px 10px;
+        }
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+        }
+        .feature h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .feature p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+        .alternative-link {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+        }
+        .alternative-link strong {
+            color: #1e293b;
+        }
+        .alternative-link code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            color: #6a1b9a;
+            word-break: break-all;
+        }
+        .footer {
+            background: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer-content {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+        .footer-content strong {
+            color: #1e293b;
+        }
+        .support-links {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .support-link {
+            color: #6a1b9a;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .support-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class='email-container'>
+        <div class='header'>
+            <div class='logo-container'>
+                <div class='logo'>N</div>
+                <div class='brand-text'>Neatrix</div>
+            </div>
+            <h1>Welcome aboard! 🎉</h1>
+            <p>Your cleaning service journey starts here</p>
+        </div>
+        
+        <div class='content'>
+            <div class='welcome-title'>Thanks for joining Neatrix!</div>
+            <div class='welcome-message'>
+                We're excited to have you as part of our community. To get started with our premium cleaning services, please confirm your email address by clicking the button below.
+            </div>
+            
+            <div class='cta-container'>
+                <a href='#' class='cta-button' onclick='alert(\"This would be the confirmation link from Supabase\"); return false;'>
+                    Confirm My Email
+                </a>
+            </div>
+            
+            <div class='features'>
+                <div class='feature'>
+                    <div class='feature-icon'>🏠</div>
+                    <h3>House Cleaning</h3>
+                    <p>Professional home cleaning services tailored to your needs</p>
+                </div>
+                <div class='feature'>
+                    <div class='feature-icon'>🏢</div>
+                    <h3>Office Cleaning</h3>
+                    <p>Keep your workspace spotless and productive</p>
+                </div>
+                <div class='feature'>
+                    <div class='feature-icon'>🎓</div>
+                    <h3>School Cleaning</h3>
+                    <p>Safe and thorough cleaning for educational facilities</p>
+                </div>
+            </div>
+            
+            <div class='alternative-link'>
+                <strong>Button not working?</strong> Copy and paste this link into your browser:<br>
+                <code>[CONFIRMATION_URL_WILL_BE_HERE]</code>
+            </div>
+        </div>
+        
+        <div class='footer'>
+            <div class='footer-content'>
+                <strong>Need help?</strong> Contact contactneatrix@gmail.com<br>
+                We're here to help you get the most out of Neatrix.
+            </div>
+            <div class='support-links'>
+                <a href='mailto:contactneatrix@gmail.com' class='support-link'>contactneatrix@gmail.com</a>
+                <a href='tel:+2349034842430' class='support-link'>📞 +2349034842430</a>
+                <a href='https://wa.me/2349034842430' class='support-link'>WhatsApp Support</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>"></iframe>
+            </div>
+        </div>
+
+        <!-- Password Reset Template -->
+        <div class="template-section">
+            <div class="template-header">
+                🔐 Password Reset Template
+            </div>
+            <div class="template-preview">
+                <div class="template-info">
+                    <h3>Template Features:</h3>
+                    <ul>
+                        <li>Security-focused design with warning notices</li>
+                        <li>Professional Neatrix admin branding</li>
+                        <li>Clear password reset instructions</li>
+                        <li>Expiration time notice</li>
+                        <li>Alternative link for accessibility</li>
+                        <li>Contact support information</li>
+                    </ul>
+                </div>
+                
+                <div class="url-info">
+                    <strong>🔗 URL Configuration:</strong> Uses <code>{{ .ConfirmationURL }}</code> - Supabase will automatically replace this with the actual password reset link
+                </div>
+
+                <iframe class="template-iframe" src="data:text/html;charset=utf-8,<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Reset your Neatrix password securely 🔒</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8fafc;
+            line-height: 1.6;
+            color: #334155;
+            padding: 20px 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .reset-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .reset-message {
+            font-size: 16px;
+            color: #475569;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 32px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 27, 154, 0.4);
+        }
+        .security-notice {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 4px solid #f59e0b;
+        }
+        .security-notice h3 {
+            color: #92400e;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .security-notice p {
+            color: #92400e;
+            font-size: 14px;
+            margin: 0;
+        }
+        .alternative-link {
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 4px solid #6a1b9a;
+        }
+        .alternative-link p {
+            margin: 0;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .alternative-link code {
+            color: #6a1b9a;
+            word-break: break-all;
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .footer {
+            background: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer-content {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+        .footer-content strong {
+            color: #1e293b;
+        }
+        .support-links {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .support-link {
+            color: #6a1b9a;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .support-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class='email-container'>
+        <div class='header'>
+            <div class='logo'>N</div>
+            <h1>Neatrix Admin</h1>
+            <p>Secure Password Reset</p>
+        </div>
+        
+        <div class='content'>
+            <h2 class='reset-title'>Forgot your password? 🔒</h2>
+            
+            <p class='reset-message'>
+                Hi user@example.com,<br><br>
+                Don't worry — it happens to the best of us. Click the button below to securely reset your password and regain access to your Neatrix Admin dashboard.
+            </p>
+            
+            <div class='cta-container'>
+                <a href='#' class='cta-button' onclick='alert(\"This would be the password reset link from Supabase\"); return false;'>
+                    Reset Password
+                </a>
+            </div>
+            
+            <div class='security-notice'>
+                <h3>⏳ Important: Link Expires Soon</h3>
+                <p>This password reset link will expire in 1 hour for security reasons. If you didn't request this reset, please ignore this email.</p>
+            </div>
+            
+            <div class='alternative-link'>
+                <p><strong>Button not working?</strong><br>
+                Copy and paste this link: <code>[RESET_URL_WILL_BE_HERE]</code></p>
+            </div>
+        </div>
+        
+        <div class='footer'>
+            <div class='footer-content'>
+                <strong>Need help?</strong> Contact contactneatrix@gmail.com<br>
+                We're here to help you get back into your account.
+            </div>
+            <div class='support-links'>
+                <a href='mailto:contactneatrix@gmail.com' class='support-link'>contactneatrix@gmail.com</a>
+                <a href='tel:+2349034842430' class='support-link'>📞 +2349034842430</a>
+                <a href='https://wa.me/2349034842430' class='support-link'>WhatsApp Support</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>"></iframe>
+            </div>
+        </div>
+
+        <!-- Forgot Password Flow Guide -->
+        <div class="deployment-section">
+            <h2>🔗 How the Forgot Password Flow Works</h2>
+            <div class="deployment-steps">
+                <h3>Complete User Journey:</h3>
+                <ol>
+                    <li><strong>User visits:</strong> <code>localhost:5173/forgot-password</code> (or your deployed URL)</li>
+                    <li><strong>Submits email:</strong> Frontend calls <code>resetPassword(email)</code></li>
+                    <li><strong>Supabase sends email:</strong> Uses the "Password Reset" template below</li>
+                    <li><strong>User clicks link:</strong> Redirects to <code>/reset-password</code> page</li>
+                    <li><strong>User sets new password:</strong> Account is updated</li>
+                </ol>
+                
+                <div style="background: #fef3c7; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #f59e0b;">
+                    <h4 style="color: #92400e; margin: 0 0 8px 0;">🚨 Current Issue: "Email Rate Limit Exceeded"</h4>
+                    <p style="margin: 0; color: #92400e;">If you're seeing this error, it means Supabase is temporarily blocking email sending due to too many attempts. Wait 1 hour or contact Supabase support to reset the limit.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment Guide -->
+        <div class="deployment-section">
+            <h2>📋 Deployment Instructions</h2>
+            <div class="deployment-steps">
+                <h3>How to Deploy These Templates:</h3>
+                <ol>
+                    <li><strong>Access Supabase Dashboard:</strong> Go to <a href="https://supabase.com/dashboard" target="_blank">https://supabase.com/dashboard</a></li>
+                    <li><strong>⚠️ IMPORTANT - Update Site URL:</strong> Go to Settings → Authentication → URL Configuration and set <strong>Site URL</strong> to: <code>https://neatrix.vercel.app/</code></li>
+                    <li><strong>Navigate to Email Templates:</strong> Settings → Authentication → Email Templates</li>
+                    <li><strong>Update Signup Confirmation:</strong> Copy the signup template code above and paste it into the "Confirm signup" template</li>
+                    <li><strong>Update Password Reset:</strong> Copy the password reset template code above and paste it into the "Reset password" template</li>
+                    <li><strong>Disable Custom SMTP:</strong> Go to Settings → Authentication → SMTP Settings and clear all fields (Host, Port, User, Pass, Sender Name, Sender Email) to use Supabase's default email service</li>
+                    <li><strong>Save Changes:</strong> Click "Save" to apply the new templates</li>
+                </ol>
+                
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #6a1b9a;">
+                    <h3 style="color: #1e293b; margin: 0 0 10px 0;">📝 Important Notes:</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #64748b;">
+                        <li>The <code>{{ .ConfirmationURL }}</code> variable will automatically redirect users to <strong>https://neatrix.vercel.app/</strong> when they click confirmation links</li>
+                        <li>The Site URL configuration is crucial - without it, confirmation links won't redirect to your website</li>
+                        <li>Templates include responsive design for mobile devices</li>
+                        <li>Neatrix branding and colors are consistently applied</li>
+                        <li>Contact information and support links are included</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin: 16px 0;">
+                    <h3 style="color: #dc2626; margin: 0 0 8px 0;">🚨 Critical Configuration</h3>
+                    <p style="margin: 0; color: #991b1b;">Make sure to update the <strong>Site URL</strong> in Supabase Dashboard to <code>https://neatrix.vercel.app/</code> before testing email confirmations. This ensures users are redirected to your website after clicking confirmation links.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

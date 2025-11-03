@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Test - Neatrix Email Templates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f8fafc;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .logo-test {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+        }
+        .logo-test img {
+            height: 60px;
+            width: auto;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .success {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .error {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Neatrix Email Template Logo Test</h1>
+        <p>This page tests if the logo URL used in email templates is working correctly.</p>
+        
+        <div class="logo-test">
+            <h3>Logo from https://neatrix.vercel.app/</h3>
+            <img 
+                src="https://neatrix.vercel.app/Neatrix_logo_transparent.png" 
+                alt="Neatrix logo" 
+                onload="showSuccess(this)" 
+                onerror="showError(this)"
+            />
+            <div id="status-1" class="status" style="display: none;"></div>
+        </div>
+
+        <div class="logo-test">
+            <h3>Fallback Logo (Local)</h3>
+            <img 
+                src="/Neatrix_logo_transparent.png" 
+                alt="Neatrix logo fallback" 
+                onload="showSuccess(this)" 
+                onerror="showError(this)"
+            />
+            <div id="status-2" class="status" style="display: none;"></div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f0f9ff; border-radius: 8px;">
+            <h3>Email Template URLs Updated:</h3>
+            <ul>
+                <li>✅ neatrix-signup-confirmation.html</li>
+                <li>✅ neatrix-password-reset.html</li>
+                <li>✅ neatrix-admin-password-reset.html</li>
+                <li>✅ neatrix-main-password-reset.html</li>
+            </ul>
+            <p><strong>Site URL:</strong> https://neatrix.vercel.app/</p>
+            <p><strong>Logo URL:</strong> https://neatrix.vercel.app/Neatrix_logo_transparent.png</p>
+        </div>
+    </div>
+
+    <script>
+        function showSuccess(img) {
+            const statusDiv = img.nextElementSibling;
+            statusDiv.className = 'status success';
+            statusDiv.textContent = '✅ Logo loaded successfully!';
+            statusDiv.style.display = 'block';
+        }
+
+        function showError(img) {
+            const statusDiv = img.nextElementSibling;
+            statusDiv.className = 'status error';
+            statusDiv.textContent = '❌ Logo failed to load';
+            statusDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

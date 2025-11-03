@@ -1,0 +1,1 @@
+export { SupabaseDataProvider, useSupabaseData } from '@/contexts/SupabaseDataContext';

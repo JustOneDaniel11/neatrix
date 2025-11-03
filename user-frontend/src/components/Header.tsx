@@ -1,0 +1,284 @@
+import { Button } from "@/components/ui/button";
+import { Sparkles, Menu, X, LogOut } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useSupabaseData } from "@/contexts/SupabaseDataContext";
+import { useDarkMode } from "@/contexts/DarkModeContext";
+import { useState, useEffect } from "react";
+
+const Header = () => {
+  const { state, signOut } = useSupabaseData();
+  const { isDarkMode } = useDarkMode();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Apply/remove dark class to document root based on dark mode state
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  // Choose logo based on theme
+  const logoSrc = isDarkMode 
+    ? "/Neatrix_logo_transparent_white.png" 
+    : "/Neatrix_logo_transparent.png";
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      try {
+        await signOut();
+        closeMobileMenu();
+      } catch (error) {
+        console.error('Error logging out:', error);
+        alert('Failed to logout. Please try again.');
+      }
+    }
+  };
+
+  return (
+    <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <img
+              src={logoSrc}
+              alt="Neatrix Logo"
+              className="h-8 w-auto md:h-10 max-w-[160px] select-none"
+            />
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link 
+              to="/" 
+              className="text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              Home
+            </Link>
+            <Link 
+              to="/services" 
+              className="text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              Services
+            </Link>
+            <Link 
+              to="/about" 
+              className="text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              About
+            </Link>
+            <Link 
+              to="/gallery" 
+              className="text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              Gallery
+            </Link>
+            <Link 
+              to="/faq" 
+              className="text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              FAQ
+            </Link>
+            <Link 
+              to="/blog" 
+              className="text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              Blog
+            </Link>
+            <Link 
+              to="/contact" 
+              className="text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              Contact
+            </Link>
+          </nav>
+
+          {/* Desktop Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
+            {state.isAuthenticated ? (
+              <>
+                <Link to="/dashboard">
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="bg-gradient-primary"
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="bg-gradient-primary"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={toggleMobileMenu}
+              className="p-3 h-12 w-12 touch-manipulation"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-7 w-7" />
+              ) : (
+                <Menu className="h-7 w-7" />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border shadow-lg z-40">
+            <nav className="container mx-auto px-4 py-6 space-y-2 safe-area-inset-bottom">
+              <Link 
+                to="/" 
+                className="block text-foreground hover:text-primary transition-colors py-3 px-2 rounded-lg hover:bg-muted/50 touch-manipulation"
+                onClick={closeMobileMenu}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/services" 
+                className="block text-foreground hover:text-primary transition-colors py-3 px-2 rounded-lg hover:bg-muted/50 touch-manipulation"
+                onClick={closeMobileMenu}
+              >
+                Services
+              </Link>
+              <Link 
+                to="/about" 
+                className="block text-foreground hover:text-primary transition-colors py-3 px-2 rounded-lg hover:bg-muted/50 touch-manipulation"
+                onClick={closeMobileMenu}
+              >
+                About
+              </Link>
+              <Link 
+                to="/gallery" 
+                className="block text-foreground hover:text-primary transition-colors py-3 px-2 rounded-lg hover:bg-muted/50 touch-manipulation"
+                onClick={closeMobileMenu}
+              >
+                Gallery
+              </Link>
+              <Link 
+                to="/faq" 
+                className="block text-foreground hover:text-primary transition-colors py-3 px-2 rounded-lg hover:bg-muted/50 touch-manipulation"
+                onClick={closeMobileMenu}
+              >
+                FAQ
+              </Link>
+              <Link 
+                to="/blog" 
+                className="block text-foreground hover:text-primary transition-colors py-3 px-2 rounded-lg hover:bg-muted/50 touch-manipulation"
+                onClick={closeMobileMenu}
+              >
+                Blog
+              </Link>
+              <Link 
+                to="/contact" 
+                className="block text-foreground hover:text-primary transition-colors py-3 px-2 rounded-lg hover:bg-muted/50 touch-manipulation"
+                onClick={closeMobileMenu}
+              >
+                Contact
+              </Link>
+              
+              {/* Mobile Auth Buttons */}
+              <div className="pt-6 space-y-3 border-t border-border mt-4">
+                {state.isAuthenticated ? (
+                  <>
+                    <Link to="/dashboard" onClick={closeMobileMenu}>
+                      <Button 
+                        variant="default" 
+                        size="lg" 
+                        className="w-full bg-gradient-primary h-12 text-base font-medium touch-manipulation"
+                      >
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="outline" 
+                      size="lg"
+                      onClick={handleLogout}
+                      className="w-full h-12 text-base font-medium touch-manipulation flex items-center justify-center space-x-2"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span>Logout</span>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" onClick={closeMobileMenu}>
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="w-full h-12 text-base font-medium touch-manipulation"
+                      >
+                        Login
+                      </Button>
+                    </Link>
+                    <Link to="/signup" onClick={closeMobileMenu}>
+                      <Button 
+                        variant="default" 
+                        size="lg" 
+                        className="w-full bg-gradient-primary h-12 text-base font-medium touch-manipulation"
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+};
+
+export default Header;
