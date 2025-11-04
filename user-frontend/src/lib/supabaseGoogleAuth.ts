@@ -5,16 +5,30 @@ import { supabase } from './supabase';
  * @returns Promise with the sign in result
  */
 export const signInWithGoogle = async () => {
-  return await supabase.auth.signInWithOAuth({
+  // Determine redirect URL based on current environment
+  const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+  const redirectTo = isProduction 
+    ? 'https://neatrix.vercel.app/auth/callback'   // Vercel production 
+    : 'http://localhost:3000/auth/callback';      // Local development
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo,
       queryParams: {
         access_type: 'offline',
         prompt: 'consent',
       },
     },
   });
+
+  if (error) {
+    console.error('Google sign-in error:', error.message);
+  } else {
+    console.log('Redirecting to Google OAuth...');
+  }
+
+  return { data, error };
 };
 
 /**

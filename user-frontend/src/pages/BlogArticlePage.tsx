@@ -98,7 +98,7 @@ const BlogArticlePage = () => {
 
           <img src={post.image} alt={post.title} referrerPolicy="no-referrer" className="w-full h-64 object-cover rounded-lg mb-8" />
 
-          <div className="prose prose-neutral max-w-none">
+          <div className="max-w-none blog-content">
             {typeof post.content === 'string' ? (
               <div dangerouslySetInnerHTML={{ __html: post.content }} />
             ) : (

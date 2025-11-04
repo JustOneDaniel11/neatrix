@@ -18,6 +18,7 @@ import EmailVerificationSuccessPage from "./pages/EmailVerificationSuccessPage";
 import EmailPreview from "./pages/EmailPreview";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import AuthCallbackPage from "./pages/AuthCallbackPage";
 import DashboardPage from "./pages/DashboardPage";
 // Removed duplicate admin imports; real admin lives in /neatrixadmin
 import SupportPage from "./pages/SupportPage";
@@ -67,6 +68,7 @@ const App = () => {
                 <Route path="/email-preview" element={<EmailPreview />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route path="/auth/callback" element={<AuthCallbackPage />} />
                 <Route path="/book-service" element={<BookingPage />} />
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/dashboard/*" element={
