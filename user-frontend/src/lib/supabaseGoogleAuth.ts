@@ -8,8 +8,8 @@ export const signInWithGoogle = async () => {
   // Determine redirect URL based on current environment
   const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
   const redirectTo = isProduction 
-    ? 'https://neatrix.vercel.app/auth/callback'   // Vercel production 
-    : 'http://localhost:3000/auth/callback';      // Local development
+    ? 'https://neatrix.site' 
+    : 'http://localhost:3000';
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
