@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+// Environment variables should be provided by the consuming application
+const supabaseUrl = process.env.VITE_SUPABASE_URL as string | undefined;
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
@@ -13,7 +14,9 @@ if (!isSupabaseConfigured) {
 }
 
 // Create a custom fetch with timeout and retry
-const fetchWithRetry = async (url: string, options: RequestInit = {}, retries = 3, timeout = 10000) => {
+const fetchWithRetry: typeof fetch = async (input, init) => {
+  const retries = 3;
+  const timeout = 10000;
   let attempt = 0;
   
   while (attempt < retries) {
@@ -21,8 +24,8 @@ const fetchWithRetry = async (url: string, options: RequestInit = {}, retries = 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeout);
       
-      const response = await fetch(url, {
-        ...options,
+      const response = await fetch(input, {
+        ...init,
         signal: controller.signal,
       });
       
@@ -42,6 +45,9 @@ const fetchWithRetry = async (url: string, options: RequestInit = {}, retries = 
       console.log(`Retrying request (${attempt}/${retries})...`);
     }
   }
+  
+  // This should never be reached, but TypeScript needs a return statement
+  throw new Error('Failed to complete fetch request after retries');
 };
 
 // Create Supabase client with session persistence

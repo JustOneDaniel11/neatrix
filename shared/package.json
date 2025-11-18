@@ -2,7 +2,7 @@
   "name": "@neatrix/shared",
   "version": "1.0.0",
   "type": "module",
-  "main": "lib/supabaseClient.ts",
+  "main": "dist/supabaseClient.js",
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4"
   },
@@ -11,6 +11,10 @@
     "react-dom": "^18.3.1"
   },
   "scripts": {
-    "vercel-build": "echo 'Shared library does not require building - files are ready to use'"
+    "build": "tsc",
+    "vercel-build": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
   }
 }
