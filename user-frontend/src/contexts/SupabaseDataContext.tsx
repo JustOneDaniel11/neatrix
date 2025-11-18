@@ -1624,7 +1624,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       if (unsetError) throw unsetError;
 
       // Then set the selected method as default
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('user_payment_methods')
         .update({ is_default: true })
         .eq('id', id)

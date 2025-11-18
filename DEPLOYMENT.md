@@ -3,7 +3,7 @@
 This guide will help you deploy both the main app and admin dashboard to Vercel with clean URLs.
 
 ## 🎯 Target URLs
-- **Main App**: `neatrix.vercel.app`
+- **Main App**: `neatrix.site`
 - **Admin Dashboard**: `neatrixadmin.vercel.app`
 
 ## 📋 Prerequisites
@@ -21,7 +21,7 @@ git commit -m "Ready for Vercel deployment"
 git push origin main
 ```
 
-### Step 2: Deploy Main App (neatrix.vercel.app)
+### Step 2: Deploy Main App (neatrix.site)
 
 1. Go to [vercel.com](https://vercel.com) and sign in
 2. Click **"New Project"**
@@ -65,7 +65,7 @@ git push origin main
 ## ✅ Final Result
 
 After deployment, you'll have:
-- **Main App**: `https://neatrix.vercel.app`
+- **Main App**: `https://neatrix.site`
 - **Admin Dashboard**: `https://neatrixadmin.vercel.app`
 
 ## 🔄 Auto-Deployment

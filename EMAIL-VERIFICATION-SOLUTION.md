@@ -77,12 +77,12 @@ The email verification system is **technically working** but requires proper SMT
 
 2. **Set URLs**
    ```
-   Site URL: https://neatrix.vercel.app
+   Site URL: https://neatrix.site
    
    Redirect URLs:
-   - https://neatrix.vercel.app/email-verification-success
-   - https://neatrix.vercel.app/auth/callback
-   - https://neatrix.vercel.app/**
+   - https://neatrix.site/email-verification-success
+   - https://neatrix.site/auth/callback
+   - https://neatrix.site/**
    ```
 
 ### Step 5: Enable Email Confirmations

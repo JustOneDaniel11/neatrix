@@ -15,7 +15,7 @@
 # Configuration - REPLACE THESE VALUES
 SUPABASE_ACCESS_TOKEN="sbp_d4c76c88fe5d9c844abcae08faf1e69408698f1d"
 PROJECT_REF="hrkpbuenwejwspjrfgkd"
-SITE_URL="https://neatrix.vercel.app"
+SITE_URL="https://neatrix.site"
 GMAIL_APP_PASSWORD="cetrijhtpkbplrkw"  # Generate from Google Account Security
 
 # Colors for output

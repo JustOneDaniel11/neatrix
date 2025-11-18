@@ -672,7 +672,7 @@
                 <h3>How to Deploy These Templates:</h3>
                 <ol>
                     <li><strong>Access Supabase Dashboard:</strong> Go to <a href="https://supabase.com/dashboard" target="_blank">https://supabase.com/dashboard</a></li>
-                    <li><strong>⚠️ IMPORTANT - Update Site URL:</strong> Go to Settings → Authentication → URL Configuration and set <strong>Site URL</strong> to: <code>https://neatrix.vercel.app/</code></li>
+                    <li><strong>⚠️ IMPORTANT - Update Site URL:</strong> Go to Settings → Authentication → URL Configuration and set <strong>Site URL</strong> to: <code>https://neatrix.site/</code></li>
                     <li><strong>Navigate to Email Templates:</strong> Settings → Authentication → Email Templates</li>
                     <li><strong>Update Signup Confirmation:</strong> Copy the signup template code above and paste it into the "Confirm signup" template</li>
                     <li><strong>Update Password Reset:</strong> Copy the password reset template code above and paste it into the "Reset password" template</li>
@@ -683,7 +683,7 @@
                 <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #6a1b9a;">
                     <h3 style="color: #1e293b; margin: 0 0 10px 0;">📝 Important Notes:</h3>
                     <ul style="margin: 0; padding-left: 20px; color: #64748b;">
-                        <li>The <code>{{ .ConfirmationURL }}</code> variable will automatically redirect users to <strong>https://neatrix.vercel.app/</strong> when they click confirmation links</li>
+                        <li>The <code>{{ .ConfirmationURL }}</code> variable will automatically redirect users to <strong>https://neatrix.site/</strong> when they click confirmation links</li>
                         <li>The Site URL configuration is crucial - without it, confirmation links won't redirect to your website</li>
                         <li>Templates include responsive design for mobile devices</li>
                         <li>Neatrix branding and colors are consistently applied</li>
@@ -693,7 +693,7 @@
                 
                 <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin: 16px 0;">
                     <h3 style="color: #dc2626; margin: 0 0 8px 0;">🚨 Critical Configuration</h3>
-                    <p style="margin: 0; color: #991b1b;">Make sure to update the <strong>Site URL</strong> in Supabase Dashboard to <code>https://neatrix.vercel.app/</code> before testing email confirmations. This ensures users are redirected to your website after clicking confirmation links.</p>
+                    <p style="margin: 0; color: #991b1b;">Make sure to update the <strong>Site URL</strong> in Supabase Dashboard to <code>https://neatrix.site/</code> before testing email confirmations. This ensures users are redirected to your website after clicking confirmation links.</p>
                 </div>
             </div>
         </div>

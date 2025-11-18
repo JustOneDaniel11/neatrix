@@ -69,11 +69,11 @@ async function deployEmailConfiguration() {
     console.log('3️⃣ URL CONFIGURATION');
     console.log('-------------------');
     console.log('Go to: https://app.supabase.com/project/' + PROJECT_REF + '/auth/url-configuration');
-    console.log('Site URL: https://neatrix.vercel.app');
+    console.log('Site URL: https://neatrix.site');
 console.log('Redirect URLs to add:');
-console.log('   - https://neatrix.vercel.app/email-verification-success');
-console.log('   - https://neatrix.vercel.app/auth/callback');
-console.log('   - https://neatrix.vercel.app/**\n');
+console.log('   - https://neatrix.site/email-verification-success');
+console.log('   - https://neatrix.site/auth/callback');
+console.log('   - https://neatrix.site/**\n');
 
     console.log('4️⃣ USER MANAGEMENT SETTINGS');
     console.log('---------------------------');
@@ -108,7 +108,7 @@ console.log('   - https://neatrix.vercel.app/**\n');
   -d '{
     "ENABLE_EMAIL_CONFIRMATIONS": true,
     "ENABLE_EMAIL_CHANGE_CONFIRMATIONS": true,
-    "SITE_URL": "https://neatrix.vercel.app"
+    "SITE_URL": "https://neatrix.site"
   }'`
         }
     ];

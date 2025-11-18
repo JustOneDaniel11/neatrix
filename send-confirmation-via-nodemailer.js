@@ -172,7 +172,7 @@ async function createTransport() {
 
 async function main() {
   const emailArg = process.argv[2] || 'helptrendingnotice@gmail.com';
-  const redirectArg = process.argv[3] || 'https://neatrix.vercel.app/email-verification-success';
+  const redirectArg = process.argv[3] || 'https://neatrix.site/email-verification-success';
 
   console.log('📧 Target recipient:', emailArg);
   console.log('🔗 Redirect URL:', redirectArg);
