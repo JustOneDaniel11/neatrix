@@ -2,6 +2,11 @@
   "version": 2,
   "builds": [
     {
+      "src": "shared/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "shared/lib" }
+    },
+    {
       "src": "user-frontend/package.json",
       "use": "@vercel/static-build",
       "config": { "distDir": "user-frontend/dist" }
