@@ -318,6 +318,7 @@ export interface AppState {
   currentUser: User | null;
   authUser: SupabaseUser | null;
   isAuthenticated: boolean;
+  isEmailVerified: boolean;
   isInitializing: boolean;
   loading: boolean;
   loadingCounter: number;
@@ -423,6 +424,7 @@ const initialState: AppState = {
   currentUser: null,
   authUser: null,
   isAuthenticated: false,
+  isEmailVerified: false,
   isInitializing: true,
   loading: false,
   loadingCounter: 0,
@@ -471,7 +473,8 @@ function dataReducer(state: AppState, action: Action): AppState {
       return { 
         ...state, 
         authUser: action.payload,
-        isAuthenticated: !!action.payload
+        isAuthenticated: !!action.payload,
+        isEmailVerified: !!action.payload?.email_confirmed_at
       };
 
     case 'SET_CURRENT_USER':
@@ -588,7 +591,8 @@ function dataReducer(state: AppState, action: Action): AppState {
         ...state,
         authUser: action.payload.authUser,
         currentUser: action.payload.user,
-        isAuthenticated: true
+        isAuthenticated: true,
+        isEmailVerified: !!action.payload.authUser?.email_confirmed_at
       };
 
     case 'LOGOUT':
@@ -596,7 +600,8 @@ function dataReducer(state: AppState, action: Action): AppState {
         ...state,
         authUser: null,
         currentUser: null,
-        isAuthenticated: false
+        isAuthenticated: false,
+        isEmailVerified: false
       };
 
     case 'SET_ADDRESSES':
@@ -1276,15 +1281,18 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
 
       if (data.user) {
+        const verified = !!data.user.email_confirmed_at;
+        if (!verified) {
+          await supabase.auth.signOut();
+          dispatch({ type: 'LOGOUT' });
+          throw new Error('Please verify your email to access your account.');
+        }
         dispatch({ type: 'SET_AUTH_USER', payload: data.user });
-        
-        // Fetch user profile
         const { data: userProfile } = await supabase
           .from('users')
           .select('*')
           .eq('id', data.user.id)
           .single();
-        
         if (userProfile) {
           dispatch({ type: 'SET_CURRENT_USER', payload: userProfile });
         }

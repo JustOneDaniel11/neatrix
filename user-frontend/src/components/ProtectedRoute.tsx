@@ -20,6 +20,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
+  if (!state.isEmailVerified) {
+    return <Navigate to="/email-verification" state={{ email: state.authUser?.email }} replace />;
+  }
+
   return <>{children}</>;
 };
 

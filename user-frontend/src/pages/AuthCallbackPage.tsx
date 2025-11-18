@@ -38,7 +38,11 @@ const AuthCallbackPage = () => {
         }
 
         if (session) {
-          console.log('✅ Google OAuth successful, user:', session.user);
+          const verified = !!session.user?.email_confirmed_at;
+          if (!verified) {
+            navigate('/email-verification', { replace: true, state: { email: session.user?.email } });
+            return;
+          }
           const dismissed = localStorage.getItem('neatrix-welcome-dismissed') === '1';
           navigate(dismissed ? '/dashboard' : '/welcome', { replace: true });
         } else {

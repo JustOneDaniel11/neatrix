@@ -26,7 +26,13 @@ const LoginPage = () => {
     
     try {
       await signIn(formData.email, formData.password);
-      // Navigate to dashboard after successful login
+      const { data } = await (await import('@/lib/supabase')).supabase.auth.getUser();
+      const isVerified = !!data.user?.email_confirmed_at;
+      if (!isVerified) {
+        setError('Please verify your email to access your account.');
+        navigate('/email-verification', { state: { email: formData.email } });
+        return;
+      }
       const state = location.state as { redirectTo?: string } | null;
       const redirectTo = state?.redirectTo ?? '/dashboard';
       navigate(redirectTo);
@@ -36,6 +42,9 @@ const LoginPage = () => {
           ? error.message
           : 'Failed to sign in. Please check your credentials.';
       setError(message);
+      if (message.toLowerCase().includes('verify your email')) {
+        navigate('/email-verification', { state: { email: formData.email } });
+      }
     }
   };
 
