@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import OrderInbox from './OrderInbox';
@@ -50,6 +51,8 @@ const MessengerOrderTracking: React.FC = () => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const location = useLocation();
+  const [requestedOrderId, setRequestedOrderId] = useState<string | null>(null);
 
   // Check if mobile view
   useEffect(() => {
@@ -64,6 +67,9 @@ const MessengerOrderTracking: React.FC = () => {
 
   // Fetch orders from Supabase with optimized query
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const idParam = params.get('orderId');
+    if (idParam) setRequestedOrderId(idParam);
     fetchOrders();
 
     // Set up real-time subscription for orders changes
@@ -157,11 +163,14 @@ const MessengerOrderTracking: React.FC = () => {
       
       setOrders(ordersWithCustomerInfo);
       
-      // If we have a selected order, update it with fresh data
-      if (selectedOrder) {
-        const updatedSelectedOrder = ordersWithCustomerInfo.find(order => order.id === selectedOrder.id);
+      // If a specific orderId was requested via query, select it
+      const targetId = requestedOrderId || selectedOrder?.id || null;
+      if (targetId) {
+        const updatedSelectedOrder = ordersWithCustomerInfo.find(order => order.id === targetId);
         if (updatedSelectedOrder) {
           setSelectedOrder(updatedSelectedOrder);
+          if (isMobile) setShowDetails(true);
+          showToast('Tracking started for selected order', 'success');
         }
       }
       

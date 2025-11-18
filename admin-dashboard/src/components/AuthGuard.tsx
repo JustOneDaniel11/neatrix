@@ -9,7 +9,7 @@ interface AuthGuardProps {
   redirectTo?: string;
 }
 
-export default function AuthGuard({ children, redirectTo = '/login' }: AuthGuardProps) {
+export default function AuthGuard({ children, redirectTo = '/admin-login' }: AuthGuardProps) {
   const { state } = useSupabaseData();
   const [showLoader, setShowLoader] = useState(true);
 

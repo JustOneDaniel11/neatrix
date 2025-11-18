@@ -25,19 +25,19 @@ import { supabase } from '../lib/supabase';
 interface Order {
   id: string;
   user_id?: string;
-  customer_name: string;
-  customer_email: string;
-  service_name: string;
+  customer_name?: string;
+  customer_email?: string;
+  service_name?: string;
   service_type?: string;
-  pickup_option: string;
-  tracking_stage: string;
-  total_amount: number;
+  pickup_option?: string;
+  tracking_stage?: string;
+  total_amount?: number;
   amount?: number;
   status?: string;
   phone?: string;
   address?: string;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
   stage_timestamps?: { [key: string]: string };
   stages?: string[];
   users?: {

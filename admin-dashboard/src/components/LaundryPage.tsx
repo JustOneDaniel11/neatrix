@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSupabaseData } from '../contexts/SupabaseDataContext';
 import { formatCurrency, formatDate } from '../lib/utils';
 import { useToast } from '../hooks/use-toast';
@@ -29,7 +30,6 @@ import {
 interface LaundryOrder {
   id: string;
   user_id: string;
-  booking_id?: string;
   order_number?: string;
   customer_name?: string;
   customer_phone?: string;
@@ -73,11 +73,12 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
   const [selectedOrder, setSelectedOrder] = useState<LaundryOrder | null>(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const navigate = useNavigate();
 
   // Auto-open modal when selectedOrderId is provided
   useEffect(() => {
     if (selectedOrderId && autoOpenModal && state.laundryOrders.length > 0) {
-      const order = state.laundryOrders.find(o => o.id === selectedOrderId || o.booking_id === selectedOrderId);
+      const order = state.laundryOrders.find(o => o.id === selectedOrderId);
       if (order) {
         setSelectedOrder(order);
         setShowOrderModal(true);
@@ -146,10 +147,7 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
         updateData.status = 'confirmed';
         // Don't set tracking_stage yet - wait for pickup/dropoff confirmation
       } else if (action === 'picked_up') {
-        // Customer brought laundry to us (pickup service) - now start tracking
         updateData.status = 'in_progress';
-        updateData.tracking_started = true;
-        updateData.picked_up_at = now;
         updateData.tracking_stage = 'sorting';
         updateData.stage_timestamps = {
           ...order.stage_timestamps,
@@ -157,10 +155,7 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
           sorting: now
         };
       } else if (action === 'dropped_off') {
-        // Customer dropped off laundry (dropoff service) - now start tracking
         updateData.status = 'in_progress';
-        updateData.tracking_started = true;
-        updateData.dropped_off_at = now;
         updateData.tracking_stage = 'sorting';
         updateData.stage_timestamps = {
           ...order.stage_timestamps,
@@ -246,9 +241,13 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
           ...selectedOrder, 
           status: updateData.status, 
           tracking_stage: updateData.tracking_stage,
-          tracking_started: updateData.tracking_started,
           stage_timestamps: updateData.stage_timestamps
         });
+      }
+
+      // Navigate to tracking page and focus this order
+      if (action === 'picked_up' || action === 'dropped_off') {
+        navigate(`/order-tracking?orderId=${orderId}`);
       }
     } catch (error: any) {
       toast({

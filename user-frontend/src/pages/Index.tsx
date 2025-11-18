@@ -8,57 +8,40 @@ import { useSupabaseData } from "../contexts/SupabaseDataContext";
 import { FullScreenCleaningLoader } from "../components/ui/CleaningLoader";
 
 const Index = () => {
-  try {
-    const { state } = useSupabaseData();
-    
-    console.log("Index page rendering - Loading:", state.loading, "Error:", state.error);
-    
-    if (state.loading) {
-      return <FullScreenCleaningLoader text="Loading Neatrix..." />;
-    }
+  const { state } = useSupabaseData();
 
-    if (state.error) {
-      return (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh',
-          backgroundColor: 'red',
-          color: 'white',
-          fontSize: '24px'
-        }}>
-          <div>Error: {state.error}</div>
-        </div>
-      );
-    }
+  console.log("Index page rendering - Loading:", state.loading, "Error:", state.error);
 
+  if (state.loading) {
+    return <FullScreenCleaningLoader text="Loading Neatrix..." />;
+  }
+
+  if (state.error) {
     return (
-      <div>
-        <Header />
-        <Hero />
-        <Services />
-        <Testimonials />
-        <Contact />
-        <Footer />
-      </div>
-    );
-  } catch (error) {
-    console.error('Index page error:', error);
-    return (
-      <div style={{ 
-        backgroundColor: 'orange', 
-        minHeight: '100vh', 
-        padding: '20px',
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: 'red',
         color: 'white',
         fontSize: '24px'
       }}>
-        <h1>Index Page Error</h1>
-        <p>Error: {error instanceof Error ? error.message : 'Unknown error'}</p>
-        <p>Check the console for more details.</p>
+        <div>Error: {state.error}</div>
       </div>
     );
   }
+
+  return (
+    <div>
+      <Header />
+      <Hero />
+      <Services />
+      <Testimonials />
+      <Contact />
+      <Footer />
+    </div>
+  );
 };
 
 export default Index;

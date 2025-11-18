@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react-swc'
 import path from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   resolve: {
     alias: {
@@ -11,13 +11,15 @@ export default defineConfig({
       "@shared": path.resolve(__dirname, "../shared"),
     },
   },
+  base: mode === 'production' ? '/admin/' : '/',
   build: {
     // Increase chunk size warning limit to reduce noisy warnings on Vercel
     chunkSizeWarningLimit: 2000,
     outDir: 'dist',
     rollupOptions: {
       input: {
-        admin: path.resolve(__dirname, 'admin.html')
+        admin: path.resolve(__dirname, 'admin.html'),
+        index: path.resolve(__dirname, 'index.html')
       }
     }
   },
@@ -34,12 +36,5 @@ export default defineConfig({
     }
   },
   clearScreen: false,
-  root: '.',
-  // Configure error overlay
-  hmr: {
-    overlay: {
-      errors: true,
-      warnings: false
-    }
-  }
-})
+  root: '.'
+}))

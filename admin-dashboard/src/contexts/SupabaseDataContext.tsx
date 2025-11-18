@@ -2,11 +2,11 @@ import React, { createContext, useContext, useReducer, useEffect, ReactNode, use
 import { supabase } from '@/lib/supabase';
 
 interface SupabaseUser { id: string; email?: string | null }
-export interface User { id: string; email?: string | null; full_name?: string | null; phone?: string; created_at?: string }
+export interface User { id: string; email?: string | null; full_name?: string | null; phone?: string; created_at?: string; status?: 'active' | 'inactive'; customerName?: string; customerEmail?: string; badge?: string }
 interface CustomerWithStats extends User {
   totalSpent: number;
   totalBookings: number;
-  status: string;
+  status?: 'active' | 'inactive';
 }
 export interface Booking { 
   id: string; 
@@ -141,6 +141,25 @@ interface SubscriptionCustomization {
   updated_at: string;
 }
 
+interface AdminSettings {
+  id?: string;
+  businessName: string;
+  contactEmail: string;
+  phoneNumber: string;
+  emailNotifications: boolean;
+  smsNotifications: boolean;
+  pushNotifications: boolean;
+  defaultServiceDuration: number;
+  bookingLeadTime: number;
+  autoConfirmBookings: boolean;
+  currency: string;
+  timeZone: string;
+  maintenanceMode: boolean;
+  serviceRadiusMiles?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
 // Legacy interface for backward compatibility
 export interface Subscription { 
   id: string; 
@@ -200,8 +219,10 @@ export interface AdminNotification {
   priority?: string;
   action_url?: string;
   action_label?: string;
+  related_id?: string;
+  is_read?: boolean;
 }
-interface Review { 
+export interface Review { 
   id: string; 
   user_id: string; 
   rating: number; 
@@ -237,6 +258,7 @@ type AppState = {
   loading: boolean;
   error: string | null;
   realTimeConnected: boolean;
+  adminSettings: AdminSettings | null;
   stats: { 
     totalBookings: number; 
     totalRevenue: number; 
@@ -280,7 +302,8 @@ type Action =
   | { type: 'SET_CURRENT_USER'; payload: User | null }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }
-  | { type: 'SET_REALTIME_CONNECTED'; payload: boolean };
+  | { type: 'SET_REALTIME_CONNECTED'; payload: boolean }
+  | { type: 'SET_ADMIN_SETTINGS'; payload: AdminSettings | null };
 
 const initialState: AppState = {
   users: [],
@@ -305,6 +328,7 @@ const initialState: AppState = {
   loading: true, // Start with loading true to check session
   error: null,
   realTimeConnected: false,
+  adminSettings: null,
   stats: { 
     totalBookings: 0, 
     totalRevenue: 0, 
@@ -448,6 +472,9 @@ function reducer(state: AppState, action: Action): AppState {
       return { ...state, error: action.payload };
     case 'SET_REALTIME_CONNECTED': 
       return { ...state, realTimeConnected: action.payload };
+    case 'SET_ADMIN_SETTINGS':
+      newState = { ...state, adminSettings: action.payload };
+      break;
     default: 
       return state;
   }
@@ -500,6 +527,8 @@ interface SupabaseDataContextType {
   sendSupportMessage: (payload: Omit<SupportMessage, 'id' | 'created_at'>) => Promise<void>;
   markMessageAsRead: (id: string) => Promise<void>;
   updateReview: (id: string, updates: Partial<Review>) => Promise<void>;
+  fetchAdminSettings: () => Promise<void>;
+  updateAdminSettings: (updates: Partial<AdminSettings>) => Promise<void>;
 }
 
 const SupabaseDataContext = createContext<SupabaseDataContextType | null>(null);
@@ -680,7 +709,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
                 }
               }
             }
-          } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          } else if (event === 'SIGNED_OUT') {
             console.log("👋 User signed out");
             // Clear session persistence on sign out
             localStorage.removeItem("neatrix-admin-remember-session");
@@ -738,6 +767,63 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       initializingRef.current = false;
     };
   }, []);
+
+  const fetchAdminSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('admin_settings')
+        .select('*')
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      if (data) {
+        dispatch({ type: 'SET_ADMIN_SETTINGS', payload: data as AdminSettings });
+      } else {
+        const defaults: AdminSettings = {
+          businessName: '',
+          contactEmail: '',
+          phoneNumber: '',
+          emailNotifications: true,
+          smsNotifications: false,
+          pushNotifications: false,
+          defaultServiceDuration: 2,
+          bookingLeadTime: 24,
+          autoConfirmBookings: false,
+          currency: 'USD',
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+          maintenanceMode: false,
+          serviceRadiusMiles: 25,
+        };
+        const { data: inserted, error: insertError } = await supabase
+          .from('admin_settings')
+          .insert(defaults)
+          .select('*')
+          .single();
+        if (insertError) throw insertError;
+        dispatch({ type: 'SET_ADMIN_SETTINGS', payload: inserted as AdminSettings });
+      }
+    } catch (err) {
+      console.error('Failed to fetch admin settings:', err);
+      dispatch({ type: 'SET_ADMIN_SETTINGS', payload: null });
+    }
+  };
+
+  const updateAdminSettings = async (updates: Partial<AdminSettings>) => {
+    try {
+      const current = state.adminSettings || ({} as AdminSettings);
+      const payload = { ...current, ...updates } as AdminSettings;
+      const { data, error } = await supabase
+        .from('admin_settings')
+        .upsert(payload, { onConflict: 'id' })
+        .select('*')
+        .single();
+      if (error) throw error;
+      dispatch({ type: 'SET_ADMIN_SETTINGS', payload: data as AdminSettings });
+    } catch (err) {
+      console.error('Failed to update admin settings:', err);
+    }
+  };
 
 
 
@@ -958,6 +1044,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         })
         .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'subscription_billing' }, () => {
           if (mounted) debounceFetch('subscription_billing', fetchSubscriptionBilling);
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'admin_settings' }, () => {
+          if (mounted) debounceFetch('admin_settings', fetchAdminSettings);
         })
         // Subscription customizations
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'subscription_customizations' }, () => {
@@ -2249,6 +2338,8 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     sendSupportMessage,
     markMessageAsRead,
     updateReview,
+    fetchAdminSettings,
+    updateAdminSettings,
   };
 
   return (

@@ -4,7 +4,7 @@ import { useSupabaseData, Booking, User, AdminNotification } from '../contexts/S
 import type { Subscription } from '../contexts/SupabaseDataContext';
 import { formatCurrency, formatDate } from '../lib/utils';
 import { useDarkMode } from '../contexts/DarkModeContext';
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import MessengerOrderTracking from '../components/MessengerOrderTracking';
 import NotificationsPage from '../components/NotificationsPage';
 import LaundryPage from '../components/LaundryPage';
@@ -85,15 +85,23 @@ const PATH_TO_TAB: Record<string, string> = {
   '/overview': 'overview',
   '/dashboard': 'overview',
   '/bookings': 'bookings',
+  '/orders': 'bookings',
   '/users': 'users',
+  '/customers': 'users',
+  '/contact-message': 'notifications',
   '/livechat': 'livechat',
+  '/live-chat': 'livechat',
   '/notifications': 'notifications',
   '/payments': 'payments',
   '/subscriptions': 'subscriptions',
   '/laundry': 'laundry',
+  '/laundry-orders': 'laundry',
   '/tracking': 'tracking',
+  '/order-tracking': 'tracking',
   '/delivery': 'delivery',
+  '/pickup-delivery': 'delivery',
   '/reviews': 'reviews',
+  '/reviews-feedback': 'reviews',
   '/posts': 'posts'
 };
 
@@ -136,7 +144,9 @@ export default function AdminDashboard() {
     pauseUserSubscription,
     resumeUserSubscription,
     cancelUserSubscription,
-    updateReview
+    updateReview,
+    fetchAdminSettings,
+    updateAdminSettings
   } = useSupabaseData();
   
   console.log('AdminDashboard state:', { 
@@ -151,9 +161,23 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
+  const supabaseReady = isSupabaseConfigured && state.isAuthenticated;
   const [postsRefreshKey, setPostsRefreshKey] = useState<number>(0);
   const [showPostEditor, setShowPostEditor] = useState(false);
-  const [editingPost, setEditingPost] = useState<any | null>(null);
+  type BlogPost = {
+    id?: string;
+    slug: string;
+    title: string;
+    excerpt?: string;
+    author?: string;
+    featured_image_url?: string;
+    status: 'draft' | 'published';
+    created_at?: string;
+    updated_at?: string;
+    category_id?: string | null;
+  };
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  type NavItem = { id: string; label: string; icon: React.ComponentType<any>; color: string; href?: string; badge?: number };
   const TAB_ROUTES: Record<string, string> = {
     overview: '/overview',
     bookings: '/bookings',
@@ -168,8 +192,21 @@ export default function AdminDashboard() {
     delivery: '/delivery',
     reviews: '/reviews',
   };
+
+  const isRealUserId = (id?: string) => !!id && !['admin','system','demo','test'].includes(String(id).toLowerCase());
+  const isRealText = (v?: string | null) => {
+    const s = String(v || '').toLowerCase();
+    return s !== '' && !s.includes('test') && !s.includes('demo') && !s.includes('example');
+  };
+  const realUsers = state.users.filter(u => !!u.id && !!u.created_at && (isRealText(u.email) || isRealText(u.full_name)));
+  const realBookingsAll = state.bookings.filter(b => !!b.created_at && isRealUserId(b.user_id));
+  const realLaundryOrders = state.laundryOrders.filter(o => !!o.created_at && isRealUserId(o.user_id));
+  const realPayments = state.payments.filter(p => !!p.created_at && isRealUserId(p.user_id) && (p.amount || 0) > 0);
+  const realSubscriptions = state.subscriptions.filter(s => !!s.start_date && isRealUserId(s.user_id));
+  const realReviews = state.reviews.filter(r => !!r.created_at && isRealUserId(r.user_id) && (r.rating || 0) > 0);
   useEffect(() => {
-    const tab = PATH_TO_TAB[location.pathname];
+    const normalizedPath = location.pathname.replace(/^\/admin/, '') || '/overview';
+    const tab = PATH_TO_TAB[normalizedPath];
     if (tab && tab !== activeTab) setActiveTab(tab);
   }, [location.pathname, activeTab]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -204,7 +241,17 @@ export default function AdminDashboard() {
   const [showSubscriptionConfirm, setShowSubscriptionConfirm] = useState(false);
 
   // Review modal state
-  const [selectedReview, setSelectedReview] = useState<any>(null);
+  type Review = {
+    id: string;
+    rating?: number;
+    comment?: string;
+    created_at?: string;
+    updated_at?: string;
+    customerName?: string;
+    status?: string;
+    serviceName?: string;
+  };
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
   
   // Toast hook
@@ -223,12 +270,41 @@ export default function AdminDashboard() {
     autoConfirmBookings: false,
     currency: 'USD',
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-    maintenanceMode: false
+    maintenanceMode: false,
+    serviceRadiusMiles: 25
   });
   
   const [originalSettings, setOriginalSettings] = useState({ ...settings });
   const [isSettingsLoading, setIsSettingsLoading] = useState(false);
   const [settingsMessage, setSettingsMessage] = useState({ type: '', text: '' });
+
+  useEffect(() => {
+    if (supabaseReady) {
+      fetchAdminSettings();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supabaseReady]);
+
+  useEffect(() => {
+    if (state.adminSettings) {
+      setSettings({
+        businessName: state.adminSettings.businessName || '',
+        contactEmail: state.adminSettings.contactEmail || '',
+        phoneNumber: state.adminSettings.phoneNumber || '',
+        emailNotifications: !!state.adminSettings.emailNotifications,
+        smsNotifications: !!state.adminSettings.smsNotifications,
+        pushNotifications: !!state.adminSettings.pushNotifications,
+        defaultServiceDuration: state.adminSettings.defaultServiceDuration ?? 2,
+        bookingLeadTime: state.adminSettings.bookingLeadTime ?? 24,
+        autoConfirmBookings: !!state.adminSettings.autoConfirmBookings,
+        currency: state.adminSettings.currency || 'USD',
+        timeZone: state.adminSettings.timeZone || (Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'),
+        maintenanceMode: !!state.adminSettings.maintenanceMode,
+        serviceRadiusMiles: state.adminSettings.serviceRadiusMiles ?? 25,
+      });
+      setOriginalSettings({ ...state.adminSettings } as any);
+    }
+  }, [state.adminSettings]);
 
   // Order tracking state
   const [trackingOrders, setTrackingOrders] = useState([]);
@@ -256,14 +332,13 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error signing out:', error);
     } finally {
-      navigate('/login');
+      navigate('/admin-login');
     }
   };
 
   // Fetch critical admin data immediately using Promise.allSettled for better error handling
   useEffect(() => {
-    // Only fetch data if user is authenticated
-    if (!state.isAuthenticated) {
+    if (!supabaseReady) {
       return;
     }
 
@@ -306,12 +381,13 @@ export default function AdminDashboard() {
       }
     };
     fetchCriticalData();
-  }, [state.isAuthenticated]); // Remove fetch functions from dependencies to prevent endless re-renders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supabaseReady]);
 
   // Lazy load additional data based on active tab
   useEffect(() => {
     // Only load data if user is authenticated
-    if (!state.isAuthenticated) {
+    if (!supabaseReady) {
       return;
     }
 
@@ -413,7 +489,7 @@ export default function AdminDashboard() {
     // Note: state.*.length dependencies are intentionally omitted to prevent infinite re-renders
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    state.isAuthenticated,
+    supabaseReady,
     activeTab,
     fetchContactMessages,
     fetchPayments,
@@ -436,12 +512,13 @@ export default function AdminDashboard() {
   };
 
   // Contact message handlers
-  const handleContactMessageClick = (message: { id: string; [key: string]: unknown }) => {
+  type ContactMessage = { id: string } & Record<string, unknown>;
+  const handleContactMessageClick = (message: ContactMessage) => {
     setSelectedContactMessage(message);
     setShowContactChat(true);
   };
 
-  const handleDeleteContactMessage = (message: { id: string; [key: string]: unknown }) => {
+  const handleDeleteContactMessage = (message: ContactMessage) => {
     setMessageToDelete(message);
     setShowDeleteConfirm(true);
   };
@@ -485,8 +562,7 @@ export default function AdminDashboard() {
     setSettingsMessage({ type: '', text: '' });
     
     try {
-      // Simulate API call to save settings
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await updateAdminSettings(settings);
       
       // Update original settings to reflect saved state
       setOriginalSettings({ ...settings });
@@ -513,31 +589,25 @@ export default function AdminDashboard() {
   };
 
   const handleResetSettings = () => {
-    const defaultSettings = {
-      businessName: 'CleanPro Services',
-      contactEmail: 'admin@cleanpro.com',
-      phoneNumber: '+1 (555) 123-4567',
-      emailNotifications: true,
-      smsNotifications: true,
-      pushNotifications: false,
-      defaultServiceDuration: 2,
-      bookingLeadTime: 24,
-      autoConfirmBookings: false,
-      currency: 'USD',
-      timeZone: 'America/New_York',
-      maintenanceMode: false
-    };
-    
-    setSettings(defaultSettings);
-    setSettingsMessage({ 
-      type: 'info', 
-      text: 'Settings reset to default values. Click "Save Changes" to apply.' 
-    });
-    
-    // Clear info message after 4 seconds
-    setTimeout(() => {
-      setSettingsMessage({ type: '', text: '' });
-    }, 4000);
+    if (state.adminSettings) {
+      setSettings({
+        businessName: state.adminSettings.businessName || '',
+        contactEmail: state.adminSettings.contactEmail || '',
+        phoneNumber: state.adminSettings.phoneNumber || '',
+        emailNotifications: !!state.adminSettings.emailNotifications,
+        smsNotifications: !!state.adminSettings.smsNotifications,
+        pushNotifications: !!state.adminSettings.pushNotifications,
+        defaultServiceDuration: state.adminSettings.defaultServiceDuration ?? 2,
+        bookingLeadTime: state.adminSettings.bookingLeadTime ?? 24,
+        autoConfirmBookings: !!state.adminSettings.autoConfirmBookings,
+        currency: state.adminSettings.currency || 'USD',
+        timeZone: state.adminSettings.timeZone || (Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'),
+        maintenanceMode: !!state.adminSettings.maintenanceMode,
+        serviceRadiusMiles: state.adminSettings.serviceRadiusMiles ?? 25,
+      });
+      setSettingsMessage({ type: 'info', text: 'Settings restored from saved values. Click "Save Changes" to apply.' });
+      setTimeout(() => setSettingsMessage({ type: '', text: '' }), 4000);
+    }
   };
 
   const handleDeleteNotification = async (notificationId: string) => {
@@ -947,7 +1017,7 @@ export default function AdminDashboard() {
 
   const renderBookings = () => {
     // Filter only inspection bookings based on search and status
-    const allFilteredBookings = state.bookings.filter(booking => {
+    const allFilteredBookings = realBookingsAll.filter(booking => {
       // Only show inspection bookings from the "Book Inspection" form
       const isInspectionBooking = booking.service_type === 'inspection';
       if (!isInspectionBooking) return false;
@@ -1170,14 +1240,14 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {state.payments.length === 0 ? (
+              {realPayments.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                     No payments recorded yet.
                   </td>
                 </tr>
               ) : (
-                state.payments.map((payment) => {
+                realPayments.map((payment) => {
                   const user = state.users.find(u => u.id === payment.user_id);
                   const relatedBooking = state.bookings.find(b => b.user_id === payment.user_id && Math.abs(Number(b.total_amount || b.amount) - payment.amount) < 1);
                   const method = (payment as { method?: string }).method || 'Card Payment';
@@ -1204,7 +1274,7 @@ export default function AdminDashboard() {
                           </div>
                           {user?.phone && (
                             <div className="text-xs text-gray-400 dark:text-gray-500">
-                              {user.phone}
+                              {user?.phone}
                             </div>
                           )}
                         </div>
@@ -1286,7 +1356,7 @@ export default function AdminDashboard() {
           </table>
         </div>
         <div className="p-4 sm:p-6 text-sm text-gray-500 dark:text-gray-400">
-          Showing {state.payments.length} payments
+          Showing {realPayments.length} payments
         </div>
       </div>
     </div>
@@ -1335,7 +1405,8 @@ export default function AdminDashboard() {
               <input
                 type="text"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                defaultValue="CleanPro Services"
+                value={settings.businessName}
+                onChange={(e) => handleSettingsChange('businessName', e.target.value)}
               />
             </div>
             <div>
@@ -1345,7 +1416,8 @@ export default function AdminDashboard() {
               <input
                 type="email"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                defaultValue="admin@cleanpro.com"
+                value={settings.contactEmail}
+                onChange={(e) => handleSettingsChange('contactEmail', e.target.value)}
               />
             </div>
             <div>
@@ -1355,7 +1427,8 @@ export default function AdminDashboard() {
               <input
                 type="tel"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                defaultValue="+1 (555) 123-4567"
+                value={settings.phoneNumber}
+                onChange={(e) => handleSettingsChange('phoneNumber', e.target.value)}
               />
             </div>
           </div>
@@ -1367,15 +1440,15 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Email Notifications</span>
-              <input type="checkbox" className="toggle" defaultChecked />
+              <input type="checkbox" className="toggle" checked={settings.emailNotifications} onChange={(e) => handleSettingsChange('emailNotifications', e.target.checked)} />
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">SMS Notifications</span>
-              <input type="checkbox" className="toggle" />
+              <input type="checkbox" className="toggle" checked={settings.smsNotifications} onChange={(e) => handleSettingsChange('smsNotifications', e.target.checked)} />
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Push Notifications</span>
-              <input type="checkbox" className="toggle" defaultChecked />
+              <input type="checkbox" className="toggle" checked={settings.pushNotifications} onChange={(e) => handleSettingsChange('pushNotifications', e.target.checked)} />
             </div>
           </div>
         </div>
@@ -1391,7 +1464,8 @@ export default function AdminDashboard() {
               <input
                 type="number"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                defaultValue="25"
+                value={settings.serviceRadiusMiles}
+                onChange={(e) => handleSettingsChange('serviceRadiusMiles', Number(e.target.value))}
               />
             </div>
             <div>
@@ -1401,7 +1475,8 @@ export default function AdminDashboard() {
               <input
                 type="number"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                defaultValue="24"
+                value={settings.bookingLeadTime}
+                onChange={(e) => handleSettingsChange('bookingLeadTime', Number(e.target.value))}
               />
             </div>
           </div>
@@ -1413,7 +1488,7 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Maintenance Mode</span>
-              <input type="checkbox" className="toggle" />
+              <input type="checkbox" className="toggle" checked={settings.maintenanceMode} onChange={(e) => handleSettingsChange('maintenanceMode', e.target.checked)} />
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Debug Mode</span>
@@ -1437,15 +1512,15 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      {state.message && (
-        <div className={`p-4 rounded-lg ${
-          state.message.includes('Error') || state.message.includes('Failed')
-            ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'
-            : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800'
-        }`}>
-          {state.message}
-        </div>
-      )}
+      {state.error && (
+  <div className={`p-4 rounded-lg ${
+    state.error.includes('Error') || state.error.includes('Failed')
+      ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'
+      : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800'
+  }`}>
+    {state.error}
+  </div>
+)}
     </div>
   );
 
@@ -1910,7 +1985,11 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Average Rating</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{state.stats.averageRating.toFixed(1)}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{
+                (realReviews.length > 0
+                  ? (realReviews.reduce((sum, r) => sum + (r.rating || 0), 0) / realReviews.length)
+                  : 0).toFixed(1)
+              }</p>
             </div>
           </div>
         </div>
@@ -1922,7 +2001,7 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Reviews</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{state.reviews.length}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{realReviews.length}</p>
             </div>
           </div>
         </div>
@@ -1934,7 +2013,7 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Reviews</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{state.stats.pendingReviews}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{realReviews.filter(r => r.status === 'pending').length}</p>
             </div>
           </div>
         </div>
@@ -1947,7 +2026,7 @@ export default function AdminDashboard() {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Positive Reviews</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {state.reviews.filter(review => review.rating >= 4).length}
+                {realReviews.filter(review => review.rating >= 4).length}
               </p>
             </div>
           </div>
@@ -1960,7 +2039,7 @@ export default function AdminDashboard() {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Reviews</h3>
         </div>
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {state.reviews.length === 0 ? (
+          {realReviews.length === 0 ? (
             <div className="px-6 py-12 text-center">
               <div className="flex flex-col items-center">
                 <Star className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-4" />
@@ -1968,7 +2047,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           ) : (
-            state.reviews.slice(0, 10).map((review) => (
+            realReviews.slice(0, 10).map((review) => (
               <div 
                 key={review.id} 
                 onClick={() => {
@@ -2429,6 +2508,16 @@ export default function AdminDashboard() {
   };
 
   const renderNotifications = () => {
+    if (!isSupabaseConfigured) {
+      return (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-3 sm:p-4 lg:p-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200">Supabase not configured</h3>
+            <span className="text-sm text-yellow-700 dark:text-yellow-300">Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY</span>
+          </div>
+        </div>
+      );
+    }
     const handleNotificationClick = (notification: AdminNotification) => {
       // Mark as read when clicked
       markNotificationAsRead(notification.id);
@@ -2458,12 +2547,13 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700">
-          <NotificationsPage 
-            notifications={state.adminNotifications}
-            onNotificationClick={handleNotificationClick}
-            onMarkAsRead={markNotificationAsRead}
-            onDeleteNotification={handleDeleteNotification}
-          />
+      <NotificationsPage 
+        notifications={state.adminNotifications}
+        onNotificationClick={handleNotificationClick}
+        onMarkAsRead={markNotificationAsRead}
+        onDeleteNotification={handleDeleteNotification}
+        realTimeConnected={state.realTimeConnected}
+      />
         </div>
       </div>
     );
@@ -2742,7 +2832,7 @@ export default function AdminDashboard() {
                         <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
                           {user.full_name || 'N/A'}
                         </h4>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{user?.email || 'N/A'}</p>
                         <p className="text-sm text-gray-500 dark:text-gray-400">{user.phone || 'N/A'}</p>
                       </div>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -2772,9 +2862,9 @@ export default function AdminDashboard() {
                         onClick={() => {
                           setSelectedUser(user);
                           setUserForm({
-                            full_name: user.full_name || '',
-                            email: user.email || '',
-                            phone: user.phone || ''
+                            full_name: user?.full_name || '',
+                            email: user?.email || '',
+                            phone: user?.phone || ''
                           });
                           setIsEditingUser(true);
                           setShowUserModal(true);
@@ -2953,21 +3043,21 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 w-full">
         <StatCard
           title="Total Bookings"
-          value={state.stats.totalBookings}
+          value={realBookingsAll.filter(b => b.service_type === 'inspection').length}
           icon={Calendar}
           trend={12}
           color="bg-blue-500"
         />
         <StatCard
           title="Total Revenue"
-          value={formatCurrency(state.stats.totalRevenue)}
+          value={formatCurrency(realBookingsAll.filter(b => b.service_type === 'inspection').reduce((s, b) => s + (b.total_amount || 0), 0) + realLaundryOrders.reduce((s, o) => s + (o.total_amount || o.amount || 0), 0))}
           icon={DollarSign}
           trend={8}
           color="bg-green-500"
         />
         <StatCard
           title="Active Subscriptions"
-          value={state.subscriptions.filter(sub => sub.status === 'active').length}
+          value={realSubscriptions.filter(sub => sub.status === 'active').length}
           icon={Repeat}
           trend={22}
           color="bg-cyan-500"
@@ -2978,21 +3068,21 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 w-full">
         <StatCard
           title="Total Payments"
-          value={state.payments.length}
+          value={realPayments.length}
           icon={CreditCard}
           trend={15}
           color="bg-emerald-500"
         />
         <StatCard
           title="Active Users"
-          value={state.stats.activeUsers}
+          value={realUsers.filter(u => u.status === 'active').length}
           icon={Users}
           trend={5}
           color="bg-purple-500"
         />
         <StatCard
           title="Laundry Orders"
-          value={state.laundryOrders.length}
+          value={realLaundryOrders.length}
           icon={Shirt}
           trend={18}
           color="bg-teal-500"
@@ -3100,11 +3190,11 @@ export default function AdminDashboard() {
                 className="relative p-2 sm:p-2.5 text-gray-700 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg sm:rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] flex items-center justify-center touch-manipulation"
               >
                 <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-                {(state.unreadNotifications || 0) > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[10px] sm:text-xs">
-                    {(state.unreadNotifications || 0) > 99 ? '99+' : (state.unreadNotifications || 0)}
-                  </span>
-                )}
+                {(state.stats.unreadNotifications || 0) > 0 && (
+  <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[10px] sm:text-xs">
+    {(state.stats.unreadNotifications || 0) > 99 ? '99+' : (state.stats.unreadNotifications || 0)}
+  </span>
+)}
               </button>
               <button 
                 onClick={handleLogout}
@@ -3130,7 +3220,7 @@ export default function AdminDashboard() {
               {/* Mobile: Comprehensive grid navigation */}
               <div className="lg:hidden">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 max-h-80 overflow-y-auto scrollbar-hide">
-                  {[
+                  {([
                     { id: 'overview', label: 'Overview', icon: BarChart3, color: 'from-blue-500 to-blue-600' },
                     { id: 'bookings', label: 'Bookings', icon: Calendar, color: 'from-green-500 to-green-600' },
                     { id: 'users', label: 'Users', icon: Users, color: 'from-purple-500 to-purple-600' },
@@ -3143,7 +3233,7 @@ export default function AdminDashboard() {
                     { id: 'tracking', label: 'Tracking', icon: Package, color: 'from-indigo-500 to-indigo-600' },
                     { id: 'delivery', label: 'Delivery', icon: Truck, color: 'from-indigo-500 to-indigo-600' },
                     { id: 'reviews', label: 'Reviews', icon: Star, color: 'from-yellow-500 to-yellow-600' },
-                  ].map((item) => (
+                  ] as NavItem[]).map((item) => (
                     <button
                       key={item.id}
                       onClick={() => { setActiveTab(item.id); navigate(item.href || TAB_ROUTES[item.id] || '/overview'); }}
@@ -3175,7 +3265,7 @@ export default function AdminDashboard() {
 
               {/* Desktop: Vertical navigation */}
               <ul className="space-y-2 hidden lg:block">
-                {[
+                {([
                   { id: 'overview', label: 'Overview', icon: BarChart3, color: 'from-blue-500 to-blue-600' },
                   { id: 'bookings', label: 'Bookings', icon: Calendar, color: 'from-green-500 to-green-600' },
                   { id: 'users', label: 'Users', icon: Users, color: 'from-purple-500 to-purple-600' },
@@ -3188,7 +3278,7 @@ export default function AdminDashboard() {
                   { id: 'tracking', label: 'Order Tracking', icon: Package, color: 'from-indigo-500 to-indigo-600' },
                   { id: 'delivery', label: 'Pickup & Delivery', icon: Truck, color: 'from-indigo-500 to-indigo-600' },
                   { id: 'reviews', label: 'Reviews & Feedback', icon: Star, color: 'from-yellow-500 to-yellow-600' },
-                ].map((item) => (
+                ] as NavItem[]).map((item) => (
                   <li key={item.id}>
                     <button
                       onClick={() => { setActiveTab(item.id); navigate(item.href || TAB_ROUTES[item.id] || '/overview'); }}

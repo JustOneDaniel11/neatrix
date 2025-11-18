@@ -30,7 +30,7 @@ export default function AdminLogin() {
         data: { session },
       } = await supabase.auth.getSession();
       if (session?.user) {
-        navigate("/admin/dashboard");
+        navigate("/overview", { replace: true });
       }
     };
     checkSession();
@@ -60,7 +60,7 @@ export default function AdminLogin() {
       dispatch({ type: "SET_ERROR", payload: null });
       dispatch({ type: "SET_AUTH_USER", payload: data.user });
       dispatch({ type: "SET_CURRENT_USER", payload: data.user });
-      navigate("/admin/dashboard");
+      navigate("/overview", { replace: true });
     } catch (err: unknown) {
       toast({
         title: "Sign in failed",

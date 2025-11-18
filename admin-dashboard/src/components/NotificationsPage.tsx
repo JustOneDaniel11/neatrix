@@ -14,8 +14,7 @@ import {
   Trash2,
   X,
   ExternalLink,
-  Eye,
-  MarkAsRead
+  Eye
 } from 'lucide-react';
 import { formatDate } from '../lib/utils';
 import { useToast } from '../hooks/use-toast';
