@@ -26,6 +26,14 @@
       "dest": "/user-frontend/assets/$1"
     },
     {
+      "src": "/(Neatrix_logo_transparent.png|Neatrix_logo_transparent_white.png|robots.txt|placeholder.svg)",
+      "dest": "/user-frontend/$1"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/user-frontend/images/$1"
+    },
+    {
       "src": "/admin/.*",
       "dest": "/admin-dashboard/admin.html"
     },
