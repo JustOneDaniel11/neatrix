@@ -837,7 +837,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         if ((error as any).code === 'PGRST205') {
           try {
             localStorage.setItem('neatrix-admin-settings', JSON.stringify(payload));
-          } catch {}
+          } catch { void 0 }
           dispatch({ type: 'SET_ADMIN_SETTINGS', payload: payload });
           return;
         }
@@ -1939,9 +1939,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'SET_LAUNDRY_ORDERS', payload: laundryOrders });
       }
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching laundry orders:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching laundry orders:', error);
     }
   };
   const fetchAdminNotifications = async () => {
@@ -1964,9 +1964,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'SET_ADMIN_NOTIFICATIONS', payload: data || [] });
       }
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching admin notifications:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching admin notifications:', error);
     }
   };
   

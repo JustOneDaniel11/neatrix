@@ -323,7 +323,7 @@ const OrderTracker: React.FC<OrderTrackerProps> = ({ booking }) => {
           <AlertCircle className="w-5 h-5 mr-2" />
           <span>Tracking is unavailable while the order is pending confirmation.</span>
         </div>
-        <p className="mt-2 text-sm text-gray-600">You’ll be able to track progress once the booking is confirmed by admin or marked as In Progress.</p>
+        <p className="mt-2 text-sm text-gray-600">You’ll be able to track progress once the booking is has been marked as either picked up or dropped off (depending on form filled).</p>
       </div>
     );
   }

@@ -27,6 +27,7 @@ export default defineConfig(({ mode }) => ({
     port: 5174,
     strictPort: true,
     open: '/admin.html',
+    historyApiFallback: true,
     fs: {
       // Allow importing files from the project root and shared directory
       allow: [

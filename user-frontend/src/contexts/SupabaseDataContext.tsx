@@ -875,7 +875,7 @@ const SupabaseDataContext = createContext<{
   updateUserComplaint: (id: string, updates: Partial<UserComplaint>) => Promise<void>;
   // Address management
   fetchUserAddresses: () => Promise<void>;
-  createAddress: (address: Omit<Address, 'id' | 'created_at' | 'updated_at'>) => Promise<void>;
+  createAddress: (address: Omit<Address, 'id' | 'created_at' | 'updated_at'>) => Promise<Address>;
   updateAddress: (id: string, updates: Partial<Address>) => Promise<void>;
   deleteAddress: (id: string) => Promise<void>;
   // Notification methods
@@ -952,6 +952,12 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'SET_LOADING', payload: true });
       
       try {
+        if (!isSupabaseConfigured) {
+          console.warn('Supabase is not configured. Skipping auth initialization.');
+          dispatch({ type: 'SET_AUTH_USER', payload: null });
+          dispatch({ type: 'SET_CURRENT_USER', payload: null });
+          return;
+        }
         // Check for existing session
         const { data: { session }, error } = await supabase.auth.getSession();
         console.log('📋 Session check result:', { session: !!session, error: !!error });
@@ -2229,6 +2235,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
 
       dispatch({ type: 'ADD_ADDRESS', payload: data });
+      return data as Address;
     } catch (error: any) {
       dispatch({ type: 'SET_ERROR', payload: error.message });
       throw error;

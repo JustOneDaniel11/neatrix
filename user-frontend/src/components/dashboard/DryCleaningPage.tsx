@@ -63,7 +63,7 @@ const DryCleaningPage = () => {
     }
 
     try {
-      await createAddress({
+      const created = await createAddress({
         type: newAddress.type,
         street: newAddress.street,
         city: newAddress.city,
@@ -74,6 +74,7 @@ const DryCleaningPage = () => {
       } as any);
 
       alert('Address added successfully');
+      setSelectedAddress(created.id);
       closeAddressModal();
     } catch (error) {
       console.error('Error adding address:', error);
@@ -435,9 +436,11 @@ const DryCleaningPage = () => {
                 <select
                   value={returnPreference}
                   onChange={(e) => setReturnPreference(e.target.value as 'pickup' | 'delivery')}
+                  required
+                  aria-required="true"
                   className="w-full px-3 py-2 sm:py-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base min-h-[44px] bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-200"
                 >
-                  <option value="">Select preference</option>
+                  <option value="" disabled>Select preference</option>
                   <option value="pickup">I will pick it up myself</option>
                   <option value="delivery">Deliver it to my location</option>
                 </select>

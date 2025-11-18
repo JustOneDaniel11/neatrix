@@ -124,6 +124,7 @@ const MessengerOrderTracking: React.FC = () => {
           pickup_option,
           tracking_stage,
           status,
+          stage_timestamps,
           total_amount,
           created_at,
           updated_at,
@@ -133,6 +134,7 @@ const MessengerOrderTracking: React.FC = () => {
             full_name
           )
         `)
+        .in('service_type', ['laundry', 'dry_cleaning'])
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -144,7 +146,12 @@ const MessengerOrderTracking: React.FC = () => {
       
       // Map the data to add customer_name and customer_email for backward compatibility
       const rawData = ((data ?? []) as unknown as RawOrderData[]);
-      const ordersWithCustomerInfo: Order[] = rawData.map(order => ({
+      const filteredRaw = rawData.filter(order => {
+        const hasPickup = Boolean((order as any).stage_timestamps?.picked_up);
+        const hasDropoff = Boolean((order as any).stage_timestamps?.dropped_off);
+        return (hasPickup || hasDropoff) && Boolean(order.tracking_stage);
+      });
+      const ordersWithCustomerInfo: Order[] = filteredRaw.map(order => ({
         id: order.id,
         user_id: order.user_id,
         service_name: order.service_name,

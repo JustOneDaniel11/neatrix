@@ -1,31 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "shared/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    },
-    {
-      "src": "user-frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    },
-    {
-      "src": "admin-dashboard/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    }
-  ],
-  "routes": [
-    { "src": "/admin/assets/(.*)", "dest": "/admin-dashboard/assets/$1" },
-    { "src": "/admin/(.*\\.(png|jpg|jpeg|svg|ico))", "dest": "/admin-dashboard/$1" },
-    { "src": "/admin", "dest": "/admin-dashboard/admin.html" },
-    { "src": "/admin/(.*)", "dest": "/admin-dashboard/admin.html" },
-    { "src": "/admin-login", "dest": "/admin-dashboard/admin.html" },
-    { "src": "/assets/(.*)", "dest": "/user-frontend/assets/$1" },
-    { "handle": "filesystem" },
-    { "src": "/(.*\\.(css|js|png|jpg|jpeg|svg|ico|map|woff|woff2))", "dest": "/user-frontend/$1" },
-    { "src": "/(.*)", "dest": "/user-frontend/index.html" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
   ]
 }

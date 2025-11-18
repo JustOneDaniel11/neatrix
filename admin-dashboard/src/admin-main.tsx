@@ -60,7 +60,7 @@ try {
   if (pathname.endsWith('/admin.html')) {
     window.history.replaceState(null, '', '/admin/overview');
   }
-} catch {}
+} catch { void 0 }
 
 ReactDOM.createRoot(root).render(
   <ErrorBoundary>

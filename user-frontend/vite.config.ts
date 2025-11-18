@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 5173,
+    historyApiFallback: true,
     fs: {
       // Allow importing files from the project root and shared directory
       allow: [

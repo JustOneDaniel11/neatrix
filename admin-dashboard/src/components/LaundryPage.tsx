@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSupabaseData } from '../contexts/SupabaseDataContext';
 import { formatCurrency, formatDate } from '../lib/utils';
@@ -18,13 +18,11 @@ import {
   Eye,
   Truck,
   Home,
-  AlertTriangle,
   Wifi,
   WifiOff,
   RefreshCw,
   X,
-  Check,
-  ArrowRight
+  Check
 } from 'lucide-react';
 
 interface LaundryOrder {
@@ -73,7 +71,22 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
   const [selectedOrder, setSelectedOrder] = useState<LaundryOrder | null>(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [orderOverrides, setOrderOverrides] = useState<Record<string, Partial<LaundryOrder>>>({});
   const navigate = useNavigate();
+
+  // Helper function to determine service type from order data
+  const getServiceType = (order: LaundryOrder): 'pickup' | 'dropoff' => {
+    // Check service_name first (contains 'Pickup' or 'Drop-off')
+    if (order.service_name?.toLowerCase().includes('pickup')) {
+      return 'pickup';
+    }
+    if (order.service_name?.toLowerCase().includes('dropoff') || order.service_name?.toLowerCase().includes('drop-off')) {
+      return 'dropoff';
+    }
+    
+    // Fallback to pickup_option if service_name doesn't contain clear indication
+    return order.pickup_option === 'delivery' ? 'dropoff' : 'pickup';
+  };
 
   // Auto-open modal when selectedOrderId is provided
   useEffect(() => {
@@ -146,6 +159,10 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
         // Approve order - set to confirmed but don't start tracking yet
         updateData.status = 'confirmed';
         // Don't set tracking_stage yet - wait for pickup/dropoff confirmation
+        setOrderOverrides(prev => ({
+          ...prev,
+          [orderId]: { status: 'confirmed' }
+        }));
       } else if (action === 'picked_up') {
         updateData.status = 'in_progress';
         updateData.tracking_stage = 'sorting';
@@ -154,6 +171,10 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
           picked_up: now,
           sorting: now
         };
+        setOrderOverrides(prev => ({
+          ...prev,
+          [orderId]: { status: 'in_progress', tracking_stage: 'sorting', stage_timestamps: updateData.stage_timestamps }
+        }));
       } else if (action === 'dropped_off') {
         updateData.status = 'in_progress';
         updateData.tracking_stage = 'sorting';
@@ -162,6 +183,10 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
           dropped_off: now,
           sorting: now
         };
+        setOrderOverrides(prev => ({
+          ...prev,
+          [orderId]: { status: 'in_progress', tracking_stage: 'sorting', stage_timestamps: updateData.stage_timestamps }
+        }));
       }
 
       const { error } = await supabase
@@ -213,6 +238,11 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
 
       await fetchLaundryOrders();
       console.log(`🔄 Orders refreshed after ${action} action`);
+      setOrderOverrides(prev => {
+        const next = { ...prev };
+        delete next[orderId];
+        return next;
+      });
       
       // Debug: Check the updated order state
       const updatedOrder = state.laundryOrders.find(o => o.id === orderId);
@@ -283,6 +313,25 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
   // Approve Order function
   const approveOrder = async (orderId: string) => {
     await updateOrderStatus(orderId, 'approve');
+  };
+
+  const setPickupOption = async (orderId: string, option: 'pickup' | 'dropoff') => {
+    setIsUpdating(true);
+    try {
+      const now = new Date().toISOString();
+      const { error } = await supabase
+        .from('bookings')
+        .update({ pickup_option: option, updated_at: now })
+        .eq('id', orderId);
+      if (error) throw error;
+      setOrderOverrides(prev => ({ ...prev, [orderId]: { pickup_option: option } }));
+      await fetchLaundryOrders();
+      toast({ title: 'Delivery Type Set', description: option === 'pickup' ? 'Pickup selected' : 'Drop-off selected' });
+    } catch (err: any) {
+      toast({ title: 'Update Failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   // Mark as Picked Up function (for pickup orders)
@@ -413,11 +462,13 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {state.laundryOrders.map((order, index) => (
+            {state.laundryOrders.map((order, index) => {
+              const merged = { ...order, ...(orderOverrides[order.id] || {}) } as LaundryOrder;
+              return (
               <div
                 key={`${order.id}-${index}`}
                 className="bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-4 hover:shadow-md transition-all duration-200 cursor-pointer"
-                onClick={() => openOrderDetails(order)}
+                onClick={() => openOrderDetails(merged)}
               >
                 {/* Order Header */}
                 <div className="flex items-center justify-between mb-3">
@@ -427,10 +478,10 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                       {order.order_number || `#${order.id.slice(-6)}`}
                     </span>
                   </div>
-                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                    {getStatusIcon(order.status)}
-                    {order.status.replace('_', ' ')}
-                  </span>
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(merged.status)}`}>
+                    {getStatusIcon(merged.status)}
+                    {merged.status.replace('_', ' ')}
+                    </span>
                 </div>
 
                 {/* Customer Info */}
@@ -464,13 +515,13 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    {order.pickup_option === 'pickup' ? (
+                    {merged.pickup_option === 'pickup' ? (
                       <Truck className="w-4 h-4 text-blue-500" />
                     ) : (
                       <Home className="w-4 h-4 text-green-500" />
                     )}
                     <span className="text-gray-600 dark:text-gray-300">
-                      {order.pickup_option === 'pickup' ? 'Pickup' : 'Drop-off'} Service
+                      {getServiceType(merged) === 'pickup' ? 'Pickup' : 'Drop-off'} Service
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
@@ -495,22 +546,22 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                     <span className="sm:hidden">View</span>
                   </button>
                   
-                  {/* Conditional Action Buttons based on pickup_type */}
-                   {order.pickup_option === 'pickup' && (
+                  {/* Conditional Action Buttons based on service type */}
+                   {getServiceType(merged) === 'pickup' && (
                      <>
-                       {console.log(`🔍 Pickup order ${order.id} button check:`, {
-                         status: order.status,
-                         tracking_stage: order.tracking_stage,
+                       {console.log(`🔍 Pickup order ${merged.id} button check:`, {
+                         status: merged.status,
+                         tracking_stage: merged.tracking_stage,
                          isPending: order.status === 'pending',
-                         isApprovedOrConfirmed: order.status === 'approved' || order.status === 'confirmed',
-                         hasNoTrackingStage: !order.tracking_stage,
-                         shouldShowPickupButton: (order.status === 'approved' || order.status === 'confirmed') && !order.tracking_stage
+                         isApprovedOrConfirmed: merged.status === 'approved' || merged.status === 'confirmed',
+                         hasNoTrackingStage: !merged.tracking_stage,
+                         shouldShowPickupButton: (merged.status === 'approved' || merged.status === 'confirmed') && !merged.tracking_stage
                        })}
-                       {order.status === 'pending' && (
+                       {merged.status === 'pending' && (
                          <button
                            onClick={(e) => {
                              e.stopPropagation();
-                             approveOrder(order.id);
+                             approveOrder(merged.id);
                            }}
                            disabled={isUpdating}
                            className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium disabled:opacity-50"
@@ -519,11 +570,11 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                            ✅ Approve Order
                          </button>
                        )}
-                       {(order.status === 'approved' || order.status === 'confirmed') && !order.tracking_stage && (
+                       {(merged.status === 'approved' || merged.status === 'confirmed') && !merged.tracking_stage && merged.pickup_option && (
                          <button
                            onClick={(e) => {
                              e.stopPropagation();
-                             markPickedUp(order.id);
+                             markPickedUp(merged.id);
                            }}
                            disabled={isUpdating}
                            className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium disabled:opacity-50"
@@ -532,24 +583,39 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                            🚚 Mark as Picked Up
                          </button>
                        )}
+                       {(merged.status === 'approved' || merged.status === 'confirmed') && !merged.tracking_stage && !merged.pickup_option && (
+                         <div className="flex items-center gap-2">
+                           <span className="text-xs text-gray-600 dark:text-gray-300">Set delivery type:</span>
+                           <button
+                             onClick={(e) => { e.stopPropagation(); setPickupOption(merged.id, 'pickup'); }}
+                             disabled={isUpdating}
+                             className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                           >Pickup</button>
+                           <button
+                             onClick={(e) => { e.stopPropagation(); setPickupOption(merged.id, 'dropoff'); }}
+                             disabled={isUpdating}
+                             className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                           >Drop-off</button>
+                         </div>
+                       )}
                      </>
                    )}
 
-                   {order.pickup_option === 'dropoff' && (
+                   {getServiceType(merged) === 'dropoff' && (
                      <>
-                       {console.log(`🔍 Dropoff order ${order.id} button check:`, {
-                         status: order.status,
-                         tracking_stage: order.tracking_stage,
+                       {console.log(`🔍 Dropoff order ${merged.id} button check:`, {
+                         status: merged.status,
+                         tracking_stage: merged.tracking_stage,
                          isPending: order.status === 'pending',
-                         isApprovedOrConfirmed: order.status === 'approved' || order.status === 'confirmed',
-                         hasNoTrackingStage: !order.tracking_stage,
-                         shouldShowDropoffButton: (order.status === 'approved' || order.status === 'confirmed') && !order.tracking_stage
+                         isApprovedOrConfirmed: merged.status === 'approved' || merged.status === 'confirmed',
+                         hasNoTrackingStage: !merged.tracking_stage,
+                         shouldShowDropoffButton: (merged.status === 'approved' || merged.status === 'confirmed') && !merged.tracking_stage
                        })}
-                       {order.status === 'pending' && (
+                       {merged.status === 'pending' && (
                          <button
                            onClick={(e) => {
                              e.stopPropagation();
-                             approveOrder(order.id);
+                             approveOrder(merged.id);
                            }}
                            disabled={isUpdating}
                            className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium disabled:opacity-50"
@@ -558,11 +624,11 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                            ✅ Approve Order
                          </button>
                        )}
-                       {(order.status === 'approved' || order.status === 'confirmed') && !order.tracking_stage && (
+                       {(merged.status === 'approved' || merged.status === 'confirmed') && !merged.tracking_stage && merged.pickup_option && (
                          <button
                            onClick={(e) => {
                              e.stopPropagation();
-                             markDroppedOff(order.id);
+                             markDroppedOff(merged.id);
                            }}
                            disabled={isUpdating}
                            className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium disabled:opacity-50"
@@ -571,11 +637,26 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                            🏢 Mark as Dropped Off
                          </button>
                        )}
+                       {(merged.status === 'approved' || merged.status === 'confirmed') && !merged.tracking_stage && !merged.pickup_option && (
+                         <div className="flex items-center gap-2">
+                           <span className="text-xs text-gray-600 dark:text-gray-300">Set delivery type:</span>
+                           <button
+                             onClick={(e) => { e.stopPropagation(); setPickupOption(merged.id, 'pickup'); }}
+                             disabled={isUpdating}
+                             className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                           >Pickup</button>
+                           <button
+                             onClick={(e) => { e.stopPropagation(); setPickupOption(merged.id, 'dropoff'); }}
+                             disabled={isUpdating}
+                             className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                           >Drop-off</button>
+                         </div>
+                       )}
                      </>
                    )}
 
                   {/* Show "In Progress" for orders that have started tracking */}
-                  {order.status === 'in_progress' && order.tracking_stage && (
+                  {merged.status === 'in_progress' && merged.tracking_stage && (
                     <div className="flex items-center gap-1 px-3 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium">
                       <CheckCircle className="w-4 h-4 text-green-600" />
                       ✔ In Progress
@@ -583,7 +664,8 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                   )}
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         )}
       </div>
@@ -704,8 +786,8 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  {/* Conditional Action Buttons based on pickup_type */}
-                  {selectedOrder.pickup_option === 'pickup' && (
+                  {/* Conditional Action Buttons based on service type */}
+                  {getServiceType(selectedOrder) === 'pickup' && (
                     <>
                       {selectedOrder.status === 'pending' && (
                         <button
@@ -717,7 +799,7 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                             setTimeout(() => {
                               toast({
                                 title: "Order Approved!",
-                                description: selectedOrder.pickup_option === 'pickup' 
+                                description: getServiceType(selectedOrder) === 'pickup' 
                                   ? "Now click 'Mark as Picked Up' when customer brings items"
                                   : "Now click 'Mark as Dropped Off' when customer brings items",
                               });
@@ -762,7 +844,7 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                     </>
                   )}
 
-                  {selectedOrder.pickup_option === 'dropoff' && (
+                  {getServiceType(selectedOrder) === 'dropoff' && (
                     <>
                       {selectedOrder.status === 'pending' && (
                         <button
@@ -774,7 +856,7 @@ export default function LaundryPage({ selectedOrderId, autoOpenModal }: LaundryP
                             setTimeout(() => {
                               toast({
                                 title: "Order Approved!",
-                                description: selectedOrder.pickup_option === 'pickup' 
+                                description: getServiceType(selectedOrder) === 'pickup' 
                                   ? "Now click 'Mark as Picked Up' when customer brings items"
                                   : "Now click 'Mark as Dropped Off' when customer brings items",
                               });

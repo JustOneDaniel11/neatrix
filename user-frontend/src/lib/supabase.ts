@@ -1,28 +1,31 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Create Supabase client with session persistence for user-frontend
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-      storageKey: 'neatrix-user-auth-token',
-      flowType: 'pkce',
-    },
-    global: {
-      headers: {
-        'x-client-info': 'neatrix-user-frontend',
-      },
-    },
-  }
-)
+const url = import.meta.env.VITE_SUPABASE_URL
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-export const isSupabaseConfigured = Boolean(
-  import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY
-)
+export const isSupabaseConfigured = Boolean(url && key)
+
+// Lazily create the client only when configured to avoid runtime crashes
+export const supabase = isSupabaseConfigured
+  ? createClient(url as string, key as string, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: 'neatrix-user-auth-token',
+        flowType: 'pkce',
+      },
+      global: {
+        headers: {
+          'x-client-info': 'neatrix-user-frontend',
+        },
+      },
+    })
+  : new Proxy({}, {
+      get() {
+        throw new Error('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      }
+    }) as any
 
 // Test connection function
 export async function testSupabaseConnection() {
