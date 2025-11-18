@@ -3168,7 +3168,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors flex flex-col">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 flex-shrink-0">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="px-2 sm:px-3 lg:px-4">
           <div className="flex items-center justify-between h-14 sm:h-16 lg:h-18">
             <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
               <div className="p-1.5 sm:p-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
@@ -3207,11 +3207,11 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8 flex-1 w-full overflow-hidden">
+      <div className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 lg:py-4 flex-1 w-full overflow-hidden">
         <div className="flex flex-col lg:flex-row gap-3 sm:gap-6 lg:gap-8 w-full min-w-0">
           {/* Sidebar */}
           <div className="lg:w-72 flex-shrink-0">
-            <nav className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4 lg:p-6 lg:sticky lg:top-20">
+            <nav className="bg-white dark:bg-gray-800 rounded-md sm:rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2 sm:p-3 lg:p-4 lg:sticky lg:top-20">
               <div className="mb-3 sm:mb-4 lg:mb-6">
                 <h2 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 dark:text-white mb-2">Navigation</h2>
                 <div className="h-1 w-6 sm:w-8 lg:w-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></div>
@@ -3312,7 +3312,7 @@ export default function AdminDashboard() {
 
           {/* Main Content */}
           <div className="flex-1 min-w-0 w-full overflow-hidden">
-            <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg sm:shadow-xl border border-gray-200 dark:border-gray-700 p-3 sm:p-4 lg:p-6 min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] overflow-auto w-full">
+            <div className="bg-white dark:bg-gray-800 rounded-md sm:rounded-xl lg:rounded-2xl shadow-lg sm:shadow-xl border border-gray-200 dark:border-gray-700 p-2 sm:p-3 lg:p-4 min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] overflow-auto w-full">
               {activeTab === 'overview' && renderOverview()}
         {activeTab === 'bookings' && renderBookings()}
         {activeTab === 'users' && renderUsers()}

@@ -776,7 +776,28 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         .order('updated_at', { ascending: false })
         .limit(1)
         .maybeSingle();
-      if (error) throw error;
+      if (error) {
+        if ((error as any).code === 'PGRST205') {
+          const defaults: AdminSettings = {
+            businessName: '',
+            contactEmail: '',
+            phoneNumber: '',
+            emailNotifications: true,
+            smsNotifications: false,
+            pushNotifications: false,
+            defaultServiceDuration: 2,
+            bookingLeadTime: 24,
+            autoConfirmBookings: false,
+            currency: 'USD',
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+            maintenanceMode: false,
+            serviceRadiusMiles: 25,
+          };
+          dispatch({ type: 'SET_ADMIN_SETTINGS', payload: defaults });
+          return;
+        }
+        throw error;
+      }
       if (data) {
         dispatch({ type: 'SET_ADMIN_SETTINGS', payload: data as AdminSettings });
       } else {
@@ -795,13 +816,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
           maintenanceMode: false,
           serviceRadiusMiles: 25,
         };
-        const { data: inserted, error: insertError } = await supabase
-          .from('admin_settings')
-          .insert(defaults)
-          .select('*')
-          .single();
-        if (insertError) throw insertError;
-        dispatch({ type: 'SET_ADMIN_SETTINGS', payload: inserted as AdminSettings });
+        dispatch({ type: 'SET_ADMIN_SETTINGS', payload: defaults });
       }
     } catch (err) {
       console.error('Failed to fetch admin settings:', err);
@@ -818,7 +833,16 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         .upsert(payload, { onConflict: 'id' })
         .select('*')
         .single();
-      if (error) throw error;
+      if (error) {
+        if ((error as any).code === 'PGRST205') {
+          try {
+            localStorage.setItem('neatrix-admin-settings', JSON.stringify(payload));
+          } catch {}
+          dispatch({ type: 'SET_ADMIN_SETTINGS', payload: payload });
+          return;
+        }
+        throw error;
+      }
       dispatch({ type: 'SET_ADMIN_SETTINGS', payload: data as AdminSettings });
     } catch (err) {
       console.error('Failed to update admin settings:', err);
@@ -1537,9 +1561,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         
       if (!error) dispatch({ type: 'SET_CONTACT_MESSAGES', payload: data || [] });
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching contact messages:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching contact messages:', error);
     }
   };
   const fetchPickupDeliveries = async () => {
@@ -1560,9 +1584,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         
       if (!error) dispatch({ type: 'SET_PICKUP_DELIVERIES', payload: data || [] });
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching pickup deliveries:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching pickup deliveries:', error);
     }
   };
   const fetchUserComplaints = async () => {
@@ -1583,9 +1607,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         
       if (!error) dispatch({ type: 'SET_USER_COMPLAINTS', payload: data || [] });
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching user complaints:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching user complaints:', error);
     }
   };
 
@@ -1608,9 +1632,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         
       if (!error) dispatch({ type: 'SET_PAYMENTS', payload: data || [] });
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching payments:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching payments:', error);
     }
   };
   const fetchSubscriptions = async () => {
@@ -1631,9 +1655,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       
       if (!error) dispatch({ type: 'SET_SUBSCRIPTIONS', payload: data || [] });
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching subscriptions:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching subscriptions:', error);
     }
   };
 
@@ -2004,9 +2028,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'SET_SUPPORT_TICKETS', payload: data || [] });
       }
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching support tickets:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching support tickets:', error);
     }
   };
   
@@ -2030,9 +2054,9 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'SET_SUPPORT_MESSAGES', payload: data || [] });
       }
     } catch (error: any) {
-      if (error?.name !== 'AbortError') {
-        console.error('Error fetching support messages:', error);
-      }
+      const msg = String(error?.message || '');
+      if (error?.name === 'AbortError' || msg.includes('net::ERR_ABORTED')) return;
+      console.error('Error fetching support messages:', error);
     }
   };
 
