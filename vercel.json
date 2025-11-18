@@ -1,5 +1,9 @@
 {
   "rewrites": [
+    { "source": "/_next/static/(.*)", "destination": "/_next/static/$1" },
+    { "source": "/static/(.*)", "destination": "/static/$1" },
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)\\.(ico|png|jpg|jpeg|gif|svg|css|js|json|html|txt)", "destination": "/$1.$2" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }
