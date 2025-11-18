@@ -16,14 +16,22 @@
       }
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/admin/(.*)",
-      "destination": "/admin-dashboard/admin.html"
+      "src": "/admin/assets/(.*)",
+      "dest": "/admin-dashboard/assets/$1"
     },
     {
-      "source": "/(.*)", 
-      "destination": "/user-frontend/index.html"
+      "src": "/assets/(.*)",
+      "dest": "/user-frontend/assets/$1"
+    },
+    {
+      "src": "/admin/.*",
+      "dest": "/admin-dashboard/admin.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/user-frontend/index.html"
     }
   ]
 }
