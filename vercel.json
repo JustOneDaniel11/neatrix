@@ -4,7 +4,7 @@
     {
       "src": "shared/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "shared/dist" }
+      "config": { "distDir": "dist" }
     },
     {
       "src": "user-frontend/package.json",
