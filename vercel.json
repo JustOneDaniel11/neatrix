@@ -9,21 +9,21 @@
     {
       "src": "user-frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "user-frontend/dist" }
+      "config": { "distDir": "dist" }
     },
     {
       "src": "admin-dashboard/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "admin-dashboard/dist" }
+      "config": { "distDir": "dist" }
     }
   ],
   "routes": [
-    { "src": "/admin/assets/(.*)", "dest": "/admin-dashboard/dist/assets/$1" },
-    { "src": "/admin/(.*\\.(png|jpg|jpeg|svg|ico))", "dest": "/admin-dashboard/dist/$1" },
-    { "src": "/admin", "dest": "/admin-dashboard/dist/admin.html" },
-    { "src": "/admin/(.*)", "dest": "/admin-dashboard/dist/admin.html" },
-    { "src": "/admin-login", "dest": "/admin-dashboard/dist/admin.html" },
-    { "src": "/assets/(.*)", "dest": "/user-frontend/dist/assets/$1" },
-    { "src": "/(.*)", "dest": "/user-frontend/dist/$1" }
+    { "src": "/admin/assets/(.*)", "dest": "/admin-dashboard/assets/$1" },
+    { "src": "/admin/(.*\\.(png|jpg|jpeg|svg|ico))", "dest": "/admin-dashboard/$1" },
+    { "src": "/admin", "dest": "/admin-dashboard/admin.html" },
+    { "src": "/admin/(.*)", "dest": "/admin-dashboard/admin.html" },
+    { "src": "/admin-login", "dest": "/admin-dashboard/admin.html" },
+    { "src": "/assets/(.*)", "dest": "/user-frontend/assets/$1" },
+    { "src": "/(.*)", "dest": "/user-frontend/$1" }
   ]
 }
