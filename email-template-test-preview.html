@@ -16,6 +16,7 @@
             line-height: 1.6;
             color: #334155;
             padding: 20px 0;
+            -webkit-text-size-adjust: 100%;
         }
         .email-container {
             max-width: 600px;
@@ -26,8 +27,8 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
-            color: white;
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);
+            color: #ffffff;
             padding: 40px 30px;
             text-align: center;
             position: relative;
@@ -39,7 +40,14 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, #a855f7, #ec4899, #6a1b9a);
+            background: linear-gradient(90deg, #0ea5e9, #22d3ee, #14b8a6);
+        }
+        .header-badges {
+            display: inline-flex;
+            gap: 10px;
+            margin-top: 12px;
+            font-size: 22px;
+            opacity: 0.95;
         }
         .logo-container {
             display: flex;
@@ -99,15 +107,15 @@
         }
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
-            color: white;
+            background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
+            color: #ffffff;
             text-decoration: none;
             padding: 16px 32px;
             border-radius: 12px;
             font-weight: 600;
             font-size: 16px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.35);
             position: relative;
             overflow: hidden;
         }
@@ -126,7 +134,7 @@
         }
         .cta-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(106, 27, 154, 0.4);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
         }
         .features {
             display: grid;
@@ -145,7 +153,7 @@
         .feature-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -174,7 +182,7 @@
         .next-steps h3 {
             font-size: 18px;
             font-weight: 600;
-            color: #6a1b9a;
+            color: #0ea5e9;
             margin-bottom: 16px;
             text-align: center;
         }
@@ -192,7 +200,7 @@
         .step-number {
             width: 24px;
             height: 24px;
-            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -221,7 +229,7 @@
             border-radius: 4px;
             font-family: 'Monaco', 'Menlo', monospace;
             font-size: 13px;
-            color: #6a1b9a;
+            color: #0ea5e9;
             word-break: break-all;
         }
         .footer {
@@ -246,7 +254,7 @@
             flex-wrap: wrap;
         }
         .support-link {
-            color: #6a1b9a;
+            color: #0ea5e9;
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
@@ -299,16 +307,18 @@
             .feature h3 {
                 font-size: 16px;
                 margin-bottom: 8px;
+                color: #0f172a !important;
             }
             .feature p {
                 font-size: 14px;
                 line-height: 1.5;
+                color: #334155 !important;
             }
             .cta-button {
-                padding: 16px 28px;
-                font-size: 16px;
+                padding: 18px 24px;
+                font-size: 18px;
                 width: 100%;
-                max-width: 280px;
+                max-width: 320px;
                 display: block;
                 text-align: center;
             }
@@ -326,10 +336,22 @@
             .support-links {
                 flex-direction: column;
                 gap: 12px;
+                align-items: center;
             }
             .support-link {
+                display: block;
+                width: 100%;
+                max-width: 340px;
+                margin: 4px auto;
+                padding: 12px 14px;
+                text-align: center;
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                color: #8b5cf6;
+                text-decoration: none;
+                font-weight: 600;
                 font-size: 15px;
-                padding: 8px 0;
             }
             .logo {
                 width: 50px;
@@ -339,55 +361,102 @@
             .brand-text {
                 font-size: 24px;
             }
+            .logo-container img {
+                height: 48px;
+            }
+            .mobile-info-card {
+                display: block;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 16px;
+                margin: 16px 0;
+                text-align: center;
+            }
+            .mobile-info-card .title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #8b5cf6;
+                margin-bottom: 8px;
+            }
+            .mobile-info-card .text {
+                font-size: 14px;
+                color: #475569;
+                line-height: 1.6;
+            }
+            .mobile-info-card .links {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 12px;
+            }
+            .mobile-info-card .link {
+                color: #8b5cf6;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 15px;
+                padding: 8px 0;
+            }
+            .mobile-info-card .link:hover {
+                text-decoration: underline;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="email-container">
-    <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 16px; text-align: center; margin-bottom: 20px; border-radius: 8px;">
-        <strong style="color: #92400e;">🧪 TEST PREVIEW</strong><br>
-        <span style="color: #92400e; font-size: 14px;">This is a test preview with sample data</span>
-    </div>
+    <div class="email-container" style="width:100%;max-width:600px;margin:0 auto;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.1);">
         <!-- Header -->
-        <div class="header">
-            <div class="logo-container">
-                <div class="logo">N</div>
-                <div class="brand-text">Neatrix</div>
+        <div class="header" style="background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);color:#ffffff;padding:40px 30px;text-align:center;position:relative;">
+            <div class="logo-container" style="display:block; text-align:center; margin-bottom:20px;">
+                <img src="https://neatrix.vercel.app/Neatrix_logo_transparent.png" alt="Neatrix logo" style="height:60px;width:auto;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.2);" onerror="this.onerror=null;this.src='https://neatrix.vercel.app/Neatrix_logo_transparent.png';" />
             </div>
             <h1>Welcome aboard! 🎉</h1>
             <p>Your cleaning service journey starts here</p>
+            <div class="header-badges">🫧 🧼 🧽 🧹 ✨</div>
         </div>
 
         <!-- Content -->
-        <div class="content">
+        <div class="content" style="padding:40px 30px;">
             <div class="welcome-title">Thanks for joining Neatrix!</div>
             <div class="welcome-message">
-                We're excited to have you as part of our community. To get started with our premium cleaning services, please confirm your email address by clicking the button below.
+                Hi <strong>test@example.com</strong>! We're excited to have you as part of our community. To get started with our premium cleaning services, please confirm your email address by clicking the button below.
             </div>
 
             <!-- CTA Button -->
-            <div class="cta-container">
-                <a href="https://your-domain.com/auth/callback?token=sample-token&type=signup&redirect_to=http://localhost:8080/email-verification-success" class="cta-button">
+            <div class="cta-container" style="text-align:center;margin:32px 0;">
+                <a href="https://your-domain.com/auth/callback?token=sample-token&type=signup&redirect_to=http://localhost:8080/email-verification-success" class="cta-button" style="background:linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);color:#ffffff;text-decoration:none;padding:16px 32px;border-radius:12px;font-weight:600;font-size:16px;display:inline-block;min-width:240px;min-height:44px;line-height:1.2;text-align:center;box-shadow:0 4px 15px rgba(14, 165, 233, 0.35);">
                     Confirm My Email
                 </a>
             </div>
 
+            <div class="mobile-info-card" style="display:none;">
+                <div class="title">🔒 Security Note</div>
+                <div class="text">This confirmation link will expire in 24 hours for your security. If you didn't create this account, you can safely ignore this email.</div>
+                <div class="title" style="margin-top:12px;">Need help? Contact contactneatrix@gmail.com</div>
+                <div class="text">We're here to help you get the most out of Neatrix.</div>
+                <div class="links">
+                    <a href="mailto:contactneatrix@gmail.com" class="link">contactneatrix@gmail.com</a>
+                    <a href="tel:+2349034842430" class="link">📞 +2349034842430</a>
+                    <a href="https://wa.me/2349034842430" class="link">WhatsApp Support</a>
+                </div>
+            </div>
+
             <!-- Features -->
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-icon">🏠</div>
-                    <h3>House Cleaning</h3>
-                    <p>Professional home cleaning services tailored to your needs</p>
+            <div class="features" style="display:block;margin:40px 0;padding:30px 20px;background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);border-radius:12px;border:1px solid #e2e8f0;">
+                <div class="feature" style="text-align:center;padding:20px 10px;">
+                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🧹</div>
+                    <h3>Floor Care</h3>
+                    <p>Sparkling floors with professional mop and polish</p>
                 </div>
-                <div class="feature">
-                    <div class="feature-icon">🏢</div>
-                    <h3>Office Cleaning</h3>
-                    <p>Keep your workspace spotless and productive</p>
+                <div class="feature" style="text-align:center;padding:20px 10px;">
+                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🧽</div>
+                    <h3>Surface Cleaning</h3>
+                    <p>Fresh and sanitized surfaces using premium supplies</p>
                 </div>
-                <div class="feature">
-                    <div class="feature-icon">🎓</div>
-                    <h3>School Cleaning</h3>
-                    <p>Safe and thorough cleaning for educational facilities</p>
+                <div class="feature" style="text-align:center;padding:20px 10px;">
+                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🧼</div>
+                    <h3>Sanitization</h3>
+                    <p>Deep clean and sanitation for health and safety</p>
                 </div>
             </div>
 
@@ -432,7 +501,7 @@
         </div>
 
         <!-- Footer -->
-        <div class="footer">
+        <div class="footer" style="background:#f8fafc;padding:30px;text-align:center;border-top:1px solid #e2e8f0;">
             <div class="footer-content">
                 <strong>Need help?</strong> Contact contactneatrix@gmail.com<br>
                 We're here to help you get the most out of Neatrix.

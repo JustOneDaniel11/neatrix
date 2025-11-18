@@ -27,7 +27,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);
             color: #ffffff;
             padding: 40px 30px;
             text-align: center;
@@ -40,7 +40,14 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, #a855f7, #ec4899, #6a1b9a);
+            background: linear-gradient(90deg, #0ea5e9, #22d3ee, #14b8a6);
+        }
+        .header-badges {
+            display: inline-flex;
+            gap: 10px;
+            margin-top: 12px;
+            font-size: 22px;
+            opacity: 0.95;
         }
         .logo-container {
             display: flex;
@@ -100,7 +107,7 @@
         }
         .cta-button {
             display: inline-block;
-            background: #10b981; /* Emerald 500 */
+            background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
             color: #ffffff;
             text-decoration: none;
             padding: 16px 32px;
@@ -108,7 +115,7 @@
             font-weight: 600;
             font-size: 16px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.35);
             position: relative;
             overflow: hidden;
         }
@@ -127,7 +134,7 @@
         }
         .cta-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
         }
         .features {
             display: grid;
@@ -146,7 +153,7 @@
         .feature-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -175,7 +182,7 @@
         .next-steps h3 {
             font-size: 18px;
             font-weight: 600;
-            color: #8b5cf6;
+            color: #0ea5e9;
             margin-bottom: 16px;
             text-align: center;
         }
@@ -222,7 +229,7 @@
             border-radius: 4px;
             font-family: 'Monaco', 'Menlo', monospace;
             font-size: 13px;
-            color: #8b5cf6;
+            color: #0ea5e9;
             word-break: break-all;
         }
         .footer {
@@ -247,7 +254,7 @@
             flex-wrap: wrap;
         }
         .support-link {
-            color: #8b5cf6;
+            color: #0ea5e9;
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
@@ -399,12 +406,13 @@
 <body>
     <div class="email-container" style="width:100%;max-width:600px;margin:0 auto;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.1);">
         <!-- Header -->
-        <div class="header" style="background:linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);color:#ffffff;padding:40px 30px;text-align:center;position:relative;">
+        <div class="header" style="background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);color:#ffffff;padding:40px 30px;text-align:center;position:relative;">
             <div class="logo-container" style="display:block; text-align:center; margin-bottom:20px;">
                 <img src="https://neatrix.vercel.app/Neatrix_logo_transparent.png" alt="Neatrix logo" style="height:60px;width:auto;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.2);" onerror="this.onerror=null;this.src='https://neatrix.vercel.app/Neatrix_logo_transparent.png';" />
             </div>
             <h1>Welcome aboard! 🎉</h1>
             <p>Your cleaning service journey starts here</p>
+            <div class="header-badges">🫧 🧼 🧽 🧹 ✨</div>
         </div>
 
         <!-- Content -->
@@ -416,7 +424,7 @@
 
             <!-- CTA Button -->
             <div class="cta-container" style="text-align:center;margin:32px 0;">
-                <a href="{{ .ConfirmationURL }}" class="cta-button" style="background:#10b981;color:#ffffff;text-decoration:none;padding:16px 32px;border-radius:12px;font-weight:600;font-size:16px;display:inline-block;min-width:240px;min-height:44px;line-height:1.2;text-align:center;box-shadow:0 4px 15px rgba(16, 185, 129, 0.3);">
+                <a href="{{ .ConfirmationURL }}" class="cta-button" style="background:linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);color:#ffffff;text-decoration:none;padding:16px 32px;border-radius:12px;font-weight:600;font-size:16px;display:inline-block;min-width:240px;min-height:44px;line-height:1.2;text-align:center;box-shadow:0 4px 15px rgba(14, 165, 233, 0.35);">
                     Confirm My Email
                 </a>
             </div>
@@ -436,19 +444,19 @@
             <!-- Features -->
             <div class="features" style="display:block;margin:40px 0;padding:30px 20px;background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);border-radius:12px;border:1px solid #e2e8f0;">
                 <div class="feature" style="text-align:center;padding:20px 10px;">
-                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🏠</div>
-                    <h3>House Cleaning</h3>
-                    <p>Professional home cleaning services tailored to your needs</p>
+                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🧹</div>
+                    <h3>Floor Care</h3>
+                    <p>Sparkling floors with professional mop and polish</p>
                 </div>
                 <div class="feature" style="text-align:center;padding:20px 10px;">
-                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🏢</div>
-                    <h3>Office Cleaning</h3>
-                    <p>Keep your workspace spotless and productive</p>
+                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🧽</div>
+                    <h3>Surface Cleaning</h3>
+                    <p>Fresh and sanitized surfaces using premium supplies</p>
                 </div>
                 <div class="feature" style="text-align:center;padding:20px 10px;">
-                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🎓</div>
-                    <h3>School Cleaning</h3>
-                    <p>Safe and thorough cleaning for educational facilities</p>
+                    <div class="feature-icon" style="width:60px;height:60px;line-height:60px;background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);border-radius:12px;display:inline-block;margin:0 auto 16px;font-size:24px;">🧼</div>
+                    <h3>Sanitization</h3>
+                    <p>Deep clean and sanitation for health and safety</p>
                 </div>
             </div>
 
