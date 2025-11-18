@@ -1,9 +1,29 @@
 {
-  "rewrites": [
-    { "source": "/_next/static/(.*)", "destination": "/_next/static/$1" },
-    { "source": "/static/(.*)", "destination": "/static/$1" },
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)\\.(ico|png|jpg|jpeg|gif|svg|css|js|json|html|txt)", "destination": "/$1.$2" },
-    { "source": "/(.*)", "destination": "/" }
+  "version": 3,
+  "builds": [
+    {
+      "src": "user-frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "admin-dashboard/package.json", 
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/admin/.*",
+      "dest": "/admin-dashboard/admin.html"
+    },
+    {
+      "src": "/.*", 
+      "dest": "/user-frontend/index.html"
+    }
   ]
 }
