@@ -1,16 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Environment variables should be provided by the consuming application
+// This is a fallback for development - in production, frontend apps must provide their own env vars
 const supabaseUrl = process.env.VITE_SUPABASE_URL as string | undefined;
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
 if (!isSupabaseConfigured) {
-  console.error('Supabase environment variables are missing:', {
-    url: !!supabaseUrl,
-    key: !!supabaseAnonKey
-  });
+  console.error('Supabase environment variables are missing in shared library. Frontend applications must provide their own environment variables.');
 }
 
 // Create a custom fetch with timeout and retry
@@ -51,9 +49,13 @@ const fetchWithRetry: typeof fetch = async (input, init) => {
 };
 
 // Create Supabase client with session persistence
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Supabase environment variables are not configured. Frontend applications must provide VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
+}
+
 export const supabase = createClient(
-  supabaseUrl || 'https://example.supabase.co',
-  supabaseAnonKey || 'example',
+  supabaseUrl,
+  supabaseAnonKey,
   {
     auth: {
       persistSession: true,
