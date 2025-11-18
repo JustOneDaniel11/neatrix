@@ -54,11 +54,15 @@ if (!root) {
   throw new Error('Admin root element #admin-root not found');
 }
 
-// Normalize preview entry path: if loaded via /admin.html, redirect to /admin/overview
+// Normalize entry paths so direct hits resolve correctly
 try {
   const { pathname } = window.location;
   if (pathname.endsWith('/admin.html')) {
     window.history.replaceState(null, '', '/admin/overview');
+  } else if (pathname === '/admin-login') {
+    window.history.replaceState(null, '', '/admin/admin-login');
+  } else if (pathname === '/reset-password') {
+    window.history.replaceState(null, '', '/admin/reset-password');
   }
 } catch {}
 

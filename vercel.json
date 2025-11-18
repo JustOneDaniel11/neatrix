@@ -13,8 +13,11 @@
     }
   ],
   "routes": [
+    { "src": "/admin/assets/(.*)", "dest": "/admin-dashboard/dist/assets/$1" },
     { "src": "/admin", "dest": "/admin-dashboard/dist/admin.html" },
-    { "src": "/admin/(.*)", "dest": "/admin-dashboard/dist/$1" },
+    { "src": "/admin/(.*)", "dest": "/admin-dashboard/dist/admin.html" },
+    { "src": "/admin-login", "dest": "/admin-dashboard/dist/admin.html" },
+    { "src": "/reset-password", "dest": "/admin-dashboard/dist/admin.html" },
     { "src": "/assets/(.*)", "dest": "/user-frontend/dist/assets/$1" },
     { "src": "/(.*)", "dest": "/user-frontend/dist/$1" }
   ]
