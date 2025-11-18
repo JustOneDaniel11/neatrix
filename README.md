@@ -6,8 +6,7 @@ A comprehensive cleaning service platform with separate user-facing and admin ap
 
 ```
 ├── user-frontend/          # Main customer-facing application
-├── admin-dashboard/        # Admin dashboard for managing services
-├── shared/                 # Shared utilities and configurations
+├── admin-dashboard/        # Admin dashboard for managing servicesshared/                 # Shared utilities and configurations
 ├── supabase/              # Database schema and configurations
 └── README.md              # This file
 ```
@@ -188,3 +187,7 @@ For support, email contactneatrix@gmail.com or contact us through the website.
 
 Built with ❤️ for professional cleaning services
 # neatrix
+=======
+# neatrix
+Neatrix Professional Cleaning Services
+>>>>>>> 155b19cd333e96c70aad8ecb4b3a0ae429aaa3ae
