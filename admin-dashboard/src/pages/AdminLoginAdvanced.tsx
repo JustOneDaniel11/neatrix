@@ -33,8 +33,8 @@ export default function AdminLoginAdvanced() {
     console.log("🔍 Auth state check:", { loading: state.loading, isAuthenticated: state.isAuthenticated, localLoading: loading });
     // Only auto-navigate if we're not in the middle of a login process
     if (!state.loading && !loading && state.isAuthenticated) {
-      console.log("🎯 User already authenticated, navigating to /overview");
-      navigate("/overview", { replace: true });
+      console.log("🎯 User already authenticated, navigating to /admin/overview");
+      navigate("/admin/overview", { replace: true });
     }
   }, [state.loading, state.isAuthenticated, navigate, loading]);
 
@@ -129,8 +129,8 @@ export default function AdminLoginAdvanced() {
       dispatch({ type: "SET_AUTH_USER", payload: data.user });
       // Do not set currentUser here – provider will fetch typed profile
       
-      console.log("🚀 Navigating to /overview...");
-      navigate("/overview", { replace: true });
+      console.log("🚀 Navigating to /admin/overview...");
+      navigate("/admin/overview", { replace: true });
       console.log("✨ Navigation call completed");
       
     } catch (err: unknown) {
@@ -223,7 +223,7 @@ export default function AdminLoginAdvanced() {
         {/* Header brand */}
         <div className="mb-6 flex items-center justify-center">
           <img 
-            src="/IOS app menu-favicon-1024by1024-2.png" 
+            src="/admin/IOS app menu-favicon-1024by1024-2.png" 
             alt="Neatrix Logo" 
             className="h-9 w-9 mr-2 rounded-lg shadow-sm"
           />

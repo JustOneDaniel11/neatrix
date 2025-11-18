@@ -179,18 +179,18 @@ export default function AdminDashboard() {
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   type NavItem = { id: string; label: string; icon: React.ComponentType<any>; color: string; href?: string; badge?: number };
   const TAB_ROUTES: Record<string, string> = {
-    overview: '/overview',
-    bookings: '/bookings',
-    users: '/users',
-    posts: '/posts',
-    livechat: '/livechat',
-    notifications: '/notifications',
-    payments: '/payments',
-    subscriptions: '/subscriptions',
-    laundry: '/laundry',
-    tracking: '/tracking',
-    delivery: '/delivery',
-    reviews: '/reviews',
+    overview: '/admin/overview',
+    bookings: '/admin/bookings',
+    users: '/admin/users',
+    posts: '/admin/posts',
+    livechat: '/admin/livechat',
+    notifications: '/admin/notifications',
+    payments: '/admin/payments',
+    subscriptions: '/admin/subscriptions',
+    laundry: '/admin/laundry',
+    tracking: '/admin/tracking',
+    delivery: '/admin/delivery',
+    reviews: '/admin/reviews',
   };
 
   const isRealUserId = (id?: string) => !!id && !['admin','system','demo','test'].includes(String(id).toLowerCase());
@@ -205,8 +205,8 @@ export default function AdminDashboard() {
   const realSubscriptions = state.subscriptions.filter(s => !!s.start_date && isRealUserId(s.user_id));
   const realReviews = state.reviews.filter(r => !!r.created_at && isRealUserId(r.user_id) && (r.rating || 0) > 0);
   useEffect(() => {
-    const normalizedPath = location.pathname.replace(/^\/admin/, '') || '/overview';
-    const tab = PATH_TO_TAB[normalizedPath];
+    const normalizedPath = location.pathname as string;
+    const tab = PATH_TO_TAB[normalizedPath.replace(/^\/admin/, '') || '/overview'];
     if (tab && tab !== activeTab) setActiveTab(tab);
   }, [location.pathname, activeTab]);
   const [searchTerm, setSearchTerm] = useState('');

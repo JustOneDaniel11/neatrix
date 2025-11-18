@@ -19,10 +19,10 @@ export default function AdminLayout() {
             </span>
           </div>
           <nav className="hidden md:flex items-center gap-4 text-sm">
-            <Link to="/overview" className={`hover:underline ${location.pathname.endsWith('/overview') ? 'text-blue-600' : 'text-gray-600 dark:text-gray-300'}`}>Overview</Link>
-            <Link to="/bookings" className="hover:underline text-gray-600 dark:text-gray-300">Bookings</Link>
-            <Link to="/users" className="hover:underline text-gray-600 dark:text-gray-300">Users</Link>
-            <Link to="/notifications" className="hover:underline text-gray-600 dark:text-gray-300">Notifications</Link>
+            <Link to="/admin/overview" className={`hover:underline ${location.pathname.endsWith('/admin/overview') ? 'text-blue-600' : 'text-gray-600 dark:text-gray-300'}`}>Overview</Link>
+            <Link to="/admin/bookings" className="hover:underline text-gray-600 dark:text-gray-300">Bookings</Link>
+            <Link to="/admin/users" className="hover:underline text-gray-600 dark:text-gray-300">Users</Link>
+            <Link to="/admin/notifications" className="hover:underline text-gray-600 dark:text-gray-300">Notifications</Link>
           </nav>
         </div>
       </header>

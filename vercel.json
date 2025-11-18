@@ -14,6 +14,7 @@
   ],
   "routes": [
     { "src": "/admin/assets/(.*)", "dest": "/admin-dashboard/dist/assets/$1" },
+    { "src": "/admin/(.*\.(png|jpg|jpeg|svg|ico))", "dest": "/admin-dashboard/dist/$1" },
     { "src": "/admin", "dest": "/admin-dashboard/dist/admin.html" },
     { "src": "/admin/(.*)", "dest": "/admin-dashboard/dist/admin.html" },
     { "src": "/admin-login", "dest": "/admin-dashboard/dist/admin.html" },

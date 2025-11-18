@@ -93,7 +93,7 @@ export default function AdminResetPassword() {
         {/* Header brand */}
         <div className="mb-6 flex items-center justify-center">
           <img 
-            src="/IOS app menu-favicon-1024by1024-2.png" 
+            src="/admin/IOS app menu-favicon-1024by1024-2.png" 
             alt="Neatrix Logo" 
             className="h-9 w-9 mr-2 rounded-lg shadow-sm"
           />

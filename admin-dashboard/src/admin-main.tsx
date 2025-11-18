@@ -54,15 +54,11 @@ if (!root) {
   throw new Error('Admin root element #admin-root not found');
 }
 
-// Normalize entry paths so direct hits resolve correctly
+// Normalize preview entry path: if loaded via /admin.html, redirect to /admin/overview
 try {
   const { pathname } = window.location;
   if (pathname.endsWith('/admin.html')) {
     window.history.replaceState(null, '', '/admin/overview');
-  } else if (pathname === '/admin-login') {
-    window.history.replaceState(null, '', '/admin/admin-login');
-  } else if (pathname === '/reset-password') {
-    window.history.replaceState(null, '', '/admin/reset-password');
   }
 } catch {}
 
@@ -71,37 +67,36 @@ ReactDOM.createRoot(root).render(
     <DarkModeProvider>
       <SupabaseDataProvider>
         <AdminProvider>
-          <Router basename="/admin">
+          <Router>
             <Routes>
               {/* Login routes - unprotected */}
-              <Route path="/" element={<AdminLoginAdvanced />} />
               <Route path="/admin-login" element={<AdminLoginAdvanced />} />
               <Route path="/reset-password" element={<AdminResetPassword />} />
               
               {/* Protected routes nested under AdminLayout */}
               <Route element={<AuthGuard redirectTo="/admin-login"><AdminLayout /></AuthGuard>}>
-                <Route path="/overview" element={<AdminDashboard />} />
-                <Route path="/dashboard" element={<AdminDashboard />} />
-                <Route path="/bookings" element={<AdminDashboard />} />
-                <Route path="/orders" element={<AdminDashboard />} />
-                <Route path="/users" element={<AdminDashboard />} />
-                <Route path="/customers" element={<AdminDashboard />} />
-                <Route path="/contacts" element={<AdminDashboard />} />
-                <Route path="/contact-message" element={<AdminDashboard />} />
-                <Route path="/notifications" element={<AdminDashboard />} />
-                <Route path="/payments" element={<AdminDashboard />} />
-                <Route path="/subscriptions" element={<AdminDashboard />} />
-                <Route path="/laundry" element={<AdminDashboard />} />
-                <Route path="/laundry-orders" element={<AdminDashboard />} />
-                <Route path="/tracking" element={<AdminDashboard />} />
-                <Route path="/order-tracking" element={<AdminDashboard />} />
-                <Route path="/delivery" element={<AdminDashboard />} />
-                <Route path="/pickup-delivery" element={<AdminDashboard />} />
-                <Route path="/reviews" element={<AdminDashboard />} />
-                <Route path="/reviews-feedback" element={<AdminDashboard />} />
-                <Route path="/posts" element={<AdminDashboard />} />
-                <Route path="/livechat" element={<AdminDashboard />} />
-                <Route path="/live-chat" element={<AdminDashboard />} />
+                <Route path="/admin/overview" element={<AdminDashboard />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/bookings" element={<AdminDashboard />} />
+                <Route path="/admin/orders" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<AdminDashboard />} />
+                <Route path="/admin/customers" element={<AdminDashboard />} />
+                <Route path="/admin/contacts" element={<AdminDashboard />} />
+                <Route path="/admin/contact-message" element={<AdminDashboard />} />
+                <Route path="/admin/notifications" element={<AdminDashboard />} />
+                <Route path="/admin/payments" element={<AdminDashboard />} />
+                <Route path="/admin/subscriptions" element={<AdminDashboard />} />
+                <Route path="/admin/laundry" element={<AdminDashboard />} />
+                <Route path="/admin/laundry-orders" element={<AdminDashboard />} />
+                <Route path="/admin/tracking" element={<AdminDashboard />} />
+                <Route path="/admin/order-tracking" element={<AdminDashboard />} />
+                <Route path="/admin/delivery" element={<AdminDashboard />} />
+                <Route path="/admin/pickup-delivery" element={<AdminDashboard />} />
+                <Route path="/admin/reviews" element={<AdminDashboard />} />
+                <Route path="/admin/reviews-feedback" element={<AdminDashboard />} />
+                <Route path="/admin/posts" element={<AdminDashboard />} />
+                <Route path="/admin/livechat" element={<AdminDashboard />} />
+                <Route path="/admin/live-chat" element={<AdminDashboard />} />
               </Route>
 
               {/* Catch all route */}
