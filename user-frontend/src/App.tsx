@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Index from "./pages/Index";
 import ServicesPage from "./pages/ServicesPage";
 import AboutPage from "./pages/AboutPage";
@@ -27,6 +27,7 @@ import NotFound from "./pages/NotFound";
 import TestPage from "./pages/TestPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import WelcomePage from "./pages/WelcomePage";
 // Removed AdminDashboardWrapper; /admin routes are not served by main app
 import { SupabaseDataProvider, useSupabaseData } from "./contexts/SupabaseDataContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -38,6 +39,17 @@ const StatusBannerHost = () => {
   const { state } = useSupabaseData();
   console.log('StatusBannerHost - state:', state);
   return <ServiceStatusBanner isOnline={!state.error} />;
+};
+
+const OAuthEntryGate = () => {
+  const navigate = useNavigate();
+  try {
+    const hash = window.location.hash || "";
+    if (hash.includes("access_token") || hash.includes("refresh_token")) {
+      navigate("/welcome", { replace: true });
+    }
+  } catch {}
+  return null;
 };
 
 const App = () => {
@@ -52,6 +64,7 @@ const App = () => {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/welcome" element={<WelcomePage />} />
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/gallery" element={<GalleryPage />} />
@@ -81,6 +94,7 @@ const App = () => {
                 {/* Catch all route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <OAuthEntryGate />
             </BrowserRouter>
           </TooltipProvider>
         </SupabaseDataProvider>
