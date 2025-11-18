@@ -18,10 +18,19 @@ const ResetPasswordPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    // Check if we have the necessary tokens from the URL
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
-    
+    const accessTokenQuery = searchParams.get('access_token');
+    const refreshTokenQuery = searchParams.get('refresh_token');
+    const hash = window.location.hash?.startsWith('#') ? window.location.hash.slice(1) : '';
+    const hashParams = new URLSearchParams(hash);
+    const accessTokenHash = hashParams.get('access_token');
+    const refreshTokenHash = hashParams.get('refresh_token');
+    const errorDesc = hashParams.get('error_description') || searchParams.get('error_description') || hashParams.get('message') || searchParams.get('message');
+    const accessToken = accessTokenQuery || accessTokenHash;
+    const refreshToken = refreshTokenQuery || refreshTokenHash;
+    if (errorDesc) {
+      setError(errorDesc);
+      return;
+    }
     if (!accessToken || !refreshToken) {
       setError('Invalid reset link. Please request a new password reset.');
     }

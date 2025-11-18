@@ -10,219 +10,89 @@ export const EmailVerificationTemplate: React.FC<EmailVerificationTemplateProps>
   verificationLink
 }) => {
   return (
-    <div style={{
-      fontFamily: 'Arial, sans-serif',
-      maxWidth: '600px',
-      margin: '0 auto',
-      backgroundColor: '#ffffff',
-      color: '#333333',
-      width: '100%'
-    }}>
-      {/* Header */}
-      <div style={{
-        backgroundColor: '#2563eb',
-        padding: '15px 10px',
-        textAlign: 'center'
-      }}>
-        <h1 style={{
-          color: '#ffffff',
-          margin: '0',
-          fontSize: '20px',
-          fontWeight: 'bold',
-          lineHeight: '1.3'
-        }}>
-          Welcome to Neatrix Professional Cleaning Services!
-        </h1>
-      </div>
-
-      {/* Main Content */}
-      <div style={{
-        padding: '20px 15px',
-        lineHeight: '1.6'
-      }}>
-        <h2 style={{
-          color: '#1f2937',
-          fontSize: '20px',
-          marginBottom: '20px'
-        }}>
-          Hi {userFirstName},
-        </h2>
-
-        <p style={{
-          fontSize: '16px',
-          marginBottom: '20px',
-          color: '#4b5563'
-        }}>
-          Thank you for signing up with Neatrix Professional Cleaning Services! We're excited to help you keep your space spotless.
-        </p>
-
-        <p style={{
-          fontSize: '16px',
-          marginBottom: '30px',
-          color: '#4b5563'
-        }}>
-          To get started, please verify your email address by clicking the button below:
-        </p>
-
-        {/* CTA Button */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '30px'
-        }}>
-          <a
-            href={verificationLink}
-            style={{
-              backgroundColor: '#2563eb',
-              color: '#ffffff',
-              padding: '12px 24px',
-              textDecoration: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              display: 'inline-block',
-              minWidth: '180px',
-              textAlign: 'center'
-            }}
-          >
-            Verify Email Address
-          </a>
-        </div>
-
-        {/* Alternative Link */}
-        <div style={{
-          backgroundColor: '#f9fafb',
-          padding: '20px',
-          borderRadius: '8px',
-          marginBottom: '30px'
-        }}>
-          <p style={{
-            fontSize: '14px',
-            color: '#6b7280',
-            margin: '0 0 10px 0'
-          }}>
-            If the button doesn't work, copy and paste this link into your browser:
-          </p>
-          <p style={{
-            fontSize: '14px',
-            color: '#2563eb',
-            wordBreak: 'break-all',
-            margin: '0'
-          }}>
-            {verificationLink}
-          </p>
-        </div>
-
-        {/* What's Next */}
-        <div style={{
-          borderLeft: '4px solid #2563eb',
-          paddingLeft: '20px',
-          marginBottom: '30px'
-        }}>
-          <h3 style={{
-            color: '#1f2937',
-            fontSize: '18px',
-            marginBottom: '15px'
-          }}>
-            What's Next?
-          </h3>
-          <ul style={{
-            color: '#4b5563',
-            fontSize: '14px',
-            paddingLeft: '20px'
-          }}>
-            <li style={{ marginBottom: '8px' }}>Complete your profile setup</li>
-            <li style={{ marginBottom: '8px' }}>Browse our cleaning services</li>
-            <li style={{ marginBottom: '8px' }}>Book your first cleaning session</li>
-            <li style={{ marginBottom: '8px' }}>Enjoy a spotless space!</li>
-          </ul>
-        </div>
-
-        {/* Contact Info */}
-        <div style={{
-          backgroundColor: '#f3f4f6',
-          padding: '20px',
-          borderRadius: '8px',
-          textAlign: 'center'
-        }}>
-          <h4 style={{
-            color: '#1f2937',
-            fontSize: '16px',
-            marginBottom: '15px'
-          }}>
-            Need Help?
-          </h4>
-          <p style={{
-            fontSize: '14px',
-            color: '#6b7280',
-            margin: '0 0 10px 0'
-          }}>
-            Our support team is here to help you 24/7
-          </p>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '20px',
-            flexWrap: 'wrap'
-          }}>
-            <a
-              href="tel:+2349034842430"
-              style={{
-                color: '#2563eb',
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: 'bold'
-              }}
-            >
-              📞 Call Us
-            </a>
-            <a
-              href="https://wa.me/2349034842430"
-              style={{
-                color: '#25d366',
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: 'bold'
-              }}
-            >
-              💬 WhatsApp
-            </a>
-            <a
-              href="mailto:contactneatrix@gmail.com"
-              style={{
-                color: '#2563eb',
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: 'bold'
-              }}
-            >
-              ✉️ Email
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div style={{
-        backgroundColor: '#1f2937',
-        padding: '20px',
-        textAlign: 'center'
-      }}>
-        <p style={{
-          color: '#9ca3af',
-          fontSize: '12px',
-          margin: '0 0 10px 0'
-        }}>
-          This email was sent to verify your Neatrix Professional Cleaning Services account.
-        </p>
-        <p style={{
-          color: '#9ca3af',
-          fontSize: '12px',
-          margin: '0'
-        }}>
-          © 2024 Neatrix Professional Cleaning Services. All rights reserved.
-        </p>
-      </div>
-    </div>
+    <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ backgroundColor: '#f3f4f6' }}>
+      <tbody>
+        <tr>
+          <td align="center">
+            <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ maxWidth: '600px', width: '100%', backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }}>
+              <tbody>
+                <tr>
+                  <td align="center" style={{ backgroundColor: '#2563eb', padding: '15px 10px' }}>
+                    <div style={{ color: '#ffffff', fontSize: '20px', fontWeight: 'bold', lineHeight: 1.3 }}>Welcome to Neatrix Professional Cleaning Services!</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ padding: '20px 15px', color: '#333333' }}>
+                    <div style={{ color: '#1f2937', fontSize: '20px', marginBottom: '20px' }}>Hi {userFirstName},</div>
+                    <div style={{ fontSize: '16px', marginBottom: '20px', color: '#4b5563' }}>Thank you for signing up with Neatrix Professional Cleaning Services! We're excited to help you keep your space spotless.</div>
+                    <div style={{ fontSize: '16px', marginBottom: '20px', color: '#4b5563' }}>To get started, please verify your email address by clicking the button below:</div>
+                    <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ marginBottom: '20px' }}>
+                      <tbody>
+                        <tr>
+                          <td align="center">
+                            <a href={verificationLink} style={{ backgroundColor: '#2563eb', color: '#ffffff', padding: '12px 24px', textDecoration: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', display: 'block', width: '100%', maxWidth: '280px', textAlign: 'center' }}>Verify Email Address</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div style={{ backgroundColor: '#f9fafb', padding: '16px', borderRadius: '8px', marginBottom: '20px' }}>
+                      <div style={{ fontSize: '14px', color: '#6b7280', marginBottom: '8px' }}>If the button doesn't work, copy and paste this link into your browser:</div>
+                      <div style={{ fontSize: '14px', color: '#2563eb', wordBreak: 'break-all' }}>{verificationLink}</div>
+                    </div>
+                    <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ marginBottom: '20px' }}>
+                      <tbody>
+                        <tr>
+                          <td style={{ borderLeft: '4px solid #2563eb', paddingLeft: '16px' }}>
+                            <div style={{ color: '#1f2937', fontSize: '18px', marginBottom: '8px' }}>What's Next?</div>
+                            <div style={{ color: '#4b5563', fontSize: '14px' }}>
+                              <div style={{ marginBottom: '6px' }}>Complete your profile setup</div>
+                              <div style={{ marginBottom: '6px' }}>Browse our cleaning services</div>
+                              <div style={{ marginBottom: '6px' }}>Book your first cleaning session</div>
+                              <div style={{ marginBottom: '6px' }}>Enjoy a spotless space!</div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table role="presentation" cellPadding={0} cellSpacing={0} width="100%">
+                      <tbody>
+                        <tr>
+                          <td align="center" style={{ backgroundColor: '#f3f4f6', padding: '16px', borderRadius: '8px' }}>
+                            <div style={{ color: '#1f2937', fontSize: '16px', marginBottom: '10px' }}>Need Help?</div>
+                            <div style={{ fontSize: '14px', color: '#6b7280', marginBottom: '12px' }}>Our support team is here to help you 24/7</div>
+                            <table role="presentation" cellPadding={0} cellSpacing={0}>
+                              <tbody>
+                                <tr>
+                                  <td align="center" style={{ padding: '4px 10px' }}>
+                                    <a href="tel:+2349034842430" style={{ color: '#2563eb', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>📞 Call Us</a>
+                                  </td>
+                                  <td align="center" style={{ padding: '4px 10px' }}>
+                                    <a href="https://wa.me/2349034842430" style={{ color: '#25d366', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>💬 WhatsApp</a>
+                                  </td>
+                                  <td align="center" style={{ padding: '4px 10px' }}>
+                                    <a href="mailto:contactneatrix@gmail.com" style={{ color: '#2563eb', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>✉️ Email</a>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style={{ backgroundColor: '#1f2937', padding: '16px' }}>
+                    <div style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>This email was sent to verify your Neatrix Professional Cleaning Services account.</div>
+                    <div style={{ color: '#9ca3af', fontSize: '12px' }}>© 2024 Neatrix Professional Cleaning Services. All rights reserved.</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   );
 };
 
@@ -236,198 +106,89 @@ export const WelcomeEmailTemplate: React.FC<WelcomeEmailTemplateProps> = ({
   loginLink
 }) => {
   return (
-    <div style={{
-      fontFamily: 'Arial, sans-serif',
-      maxWidth: '600px',
-      margin: '0 auto',
-      backgroundColor: '#ffffff',
-      color: '#333333'
-    }}>
-      {/* Header */}
-      <div style={{
-        backgroundColor: '#16a34a',
-        padding: '20px',
-        textAlign: 'center'
-      }}>
-        <h1 style={{
-          color: '#ffffff',
-          margin: '0',
-          fontSize: '24px',
-          fontWeight: 'bold'
-        }}>
-          🎉 Welcome to Neatrix Professional Cleaning Services!
-        </h1>
-      </div>
-
-      {/* Main Content */}
-      <div style={{
-        padding: '30px 20px',
-        lineHeight: '1.6'
-      }}>
-        <h2 style={{
-          color: '#1f2937',
-          fontSize: '20px',
-          marginBottom: '20px'
-        }}>
-          Hi {userFirstName},
-        </h2>
-
-        <p style={{
-          fontSize: '16px',
-          marginBottom: '20px',
-          color: '#4b5563'
-        }}>
-          Congratulations! Your email has been successfully verified and your Neatrix Professional Cleaning Services account is now active.
-        </p>
-
-        <p style={{
-          fontSize: '16px',
-          marginBottom: '30px',
-          color: '#4b5563'
-        }}>
-          You can now access all our premium cleaning services and book your first session.
-        </p>
-
-        {/* CTA Button */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '30px'
-        }}>
-          <a
-            href={loginLink}
-            style={{
-              backgroundColor: '#16a34a',
-              color: '#ffffff',
-              padding: '15px 30px',
-              textDecoration: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              display: 'inline-block',
-              minWidth: '200px'
-            }}
-          >
-            Access Your Dashboard
-          </a>
-        </div>
-
-        {/* Services Preview */}
-        <div style={{
-          backgroundColor: '#f0f9ff',
-          padding: '20px',
-          borderRadius: '8px',
-          marginBottom: '30px'
-        }}>
-          <h3 style={{
-            color: '#1f2937',
-            fontSize: '18px',
-            marginBottom: '15px',
-            textAlign: 'center'
-          }}>
-            Our Premium Services
-          </h3>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-            gap: '15px',
-            textAlign: 'center'
-          }}>
-            <div>
-              <div style={{ fontSize: '24px', marginBottom: '5px' }}>🏠</div>
-              <div style={{ fontSize: '14px', color: '#4b5563', fontWeight: 'bold' }}>House Cleaning</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '24px', marginBottom: '5px' }}>🏢</div>
-              <div style={{ fontSize: '14px', color: '#4b5563', fontWeight: 'bold' }}>Office Cleaning</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '24px', marginBottom: '5px' }}>✨</div>
-              <div style={{ fontSize: '14px', color: '#4b5563', fontWeight: 'bold' }}>Deep Cleaning</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Special Offer */}
-        <div style={{
-          backgroundColor: '#fef3c7',
-          border: '2px solid #f59e0b',
-          padding: '20px',
-          borderRadius: '8px',
-          textAlign: 'center',
-          marginBottom: '30px'
-        }}>
-          <h3 style={{
-            color: '#92400e',
-            fontSize: '18px',
-            marginBottom: '10px'
-          }}>
-            🎁 Welcome Offer!
-          </h3>
-          <p style={{
-            color: '#92400e',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            margin: '0'
-          }}>
-            Get 20% off your first cleaning service
-          </p>
-          <p style={{
-            color: '#92400e',
-            fontSize: '14px',
-            margin: '5px 0 0 0'
-          }}>
-            Use code: WELCOME20
-          </p>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div style={{
-        backgroundColor: '#1f2937',
-        padding: '20px',
-        textAlign: 'center'
-      }}>
-        <p style={{
-          color: '#9ca3af',
-          fontSize: '12px',
-          margin: '0 0 10px 0'
-        }}>
-          Thank you for choosing Neatrix Professional Cleaning Services for your cleaning needs.
-        </p>
-        <p style={{
-          color: '#9ca3af',
-          fontSize: '12px',
-          margin: '0'
-        }}>
-          © 2024 Neatrix Professional Cleaning Services. All rights reserved.
-        </p>
-      </div>
-    </div>
+    <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ backgroundColor: '#f3f4f6' }}>
+      <tbody>
+        <tr>
+          <td align="center">
+            <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ maxWidth: '600px', width: '100%', backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }}>
+              <tbody>
+                <tr>
+                  <td align="center" style={{ backgroundColor: '#16a34a', padding: '16px' }}>
+                    <div style={{ color: '#ffffff', fontSize: '22px', fontWeight: 'bold' }}>🎉 Welcome to Neatrix Professional Cleaning Services!</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ padding: '24px 16px', color: '#333333' }}>
+                    <div style={{ color: '#1f2937', fontSize: '20px', marginBottom: '16px' }}>Hi {userFirstName},</div>
+                    <div style={{ fontSize: '16px', marginBottom: '16px', color: '#4b5563' }}>Congratulations! Your email has been successfully verified and your Neatrix Professional Cleaning Services account is now active.</div>
+                    <div style={{ fontSize: '16px', marginBottom: '20px', color: '#4b5563' }}>You can now access all our premium cleaning services and book your first session.</div>
+                    <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ marginBottom: '20px' }}>
+                      <tbody>
+                        <tr>
+                          <td align="center">
+                            <a href={loginLink} style={{ backgroundColor: '#16a34a', color: '#ffffff', padding: '14px 24px', textDecoration: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', display: 'block', width: '100%', maxWidth: '300px', textAlign: 'center' }}>Access Your Dashboard</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ backgroundColor: '#f0f9ff', borderRadius: '8px', marginBottom: '20px' }}>
+                      <tbody>
+                        <tr>
+                          <td align="center" style={{ padding: '16px' }}>
+                            <div style={{ color: '#1f2937', fontSize: '18px', marginBottom: '10px' }}>Our Premium Services</div>
+                            <table role="presentation" cellPadding={0} cellSpacing={0}>
+                              <tbody>
+                                <tr>
+                                  <td align="center" style={{ padding: '8px 14px' }}>
+                                    <div style={{ fontSize: '24px', marginBottom: '4px' }}>🏠</div>
+                                    <div style={{ fontSize: '14px', color: '#4b5563', fontWeight: 'bold' }}>House Cleaning</div>
+                                  </td>
+                                  <td align="center" style={{ padding: '8px 14px' }}>
+                                    <div style={{ fontSize: '24px', marginBottom: '4px' }}>🏢</div>
+                                    <div style={{ fontSize: '14px', color: '#4b5563', fontWeight: 'bold' }}>Office Cleaning</div>
+                                  </td>
+                                  <td align="center" style={{ padding: '8px 14px' }}>
+                                    <div style={{ fontSize: '24px', marginBottom: '4px' }}>✨</div>
+                                    <div style={{ fontSize: '14px', color: '#4b5563', fontWeight: 'bold' }}>Deep Cleaning</div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table role="presentation" cellPadding={0} cellSpacing={0} width="100%" style={{ marginBottom: '20px', border: '2px solid #f59e0b', borderRadius: '8px', backgroundColor: '#fef3c7' }}>
+                      <tbody>
+                        <tr>
+                          <td align="center" style={{ padding: '16px' }}>
+                            <div style={{ color: '#92400e', fontSize: '18px', marginBottom: '8px' }}>🎁 Welcome Offer!</div>
+                            <div style={{ color: '#92400e', fontSize: '16px', fontWeight: 'bold' }}>Get 20% off your first cleaning service</div>
+                            <div style={{ color: '#92400e', fontSize: '14px', marginTop: '6px' }}>Use code: WELCOME20</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style={{ backgroundColor: '#1f2937', padding: '16px' }}>
+                    <div style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>Thank you for choosing Neatrix Professional Cleaning Services for your cleaning needs.</div>
+                    <div style={{ color: '#9ca3af', fontSize: '12px' }}>© 2024 Neatrix Professional Cleaning Services. All rights reserved.</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   );
 };
 
 // Utility function to generate email HTML
+import { renderToStaticMarkup } from 'react-dom/server';
 export const generateEmailHTML = (template: React.ReactElement): string => {
-  // This would typically use a server-side rendering solution
-  // For now, we'll return a placeholder
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Neatrix Professional Cleaning Services</title>
-      <style>
-        @media only screen and (max-width: 600px) {
-          .container { width: 100% !important; }
-          .content { padding: 20px 15px !important; }
-          .button { width: 100% !important; }
-        }
-      </style>
-    </head>
-    <body style="margin: 0; padding: 0; background-color: #f3f4f6;">
-      ${template}
-    </body>
-    </html>
-  `;
+  const body = renderToStaticMarkup(template);
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="x-ua-compatible" content="ie=edge"><title>Neatrix Professional Cleaning Services</title><style>@media only screen and (max-width:600px){.sm-full{width:100%!important;display:block!important}.sm-px{padding-left:15px!important;padding-right:15px!important}}</style></head><body style="margin:0;padding:0;background-color:#f3f4f6">${body}</body></html>`;
 };

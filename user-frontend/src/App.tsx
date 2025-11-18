@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import ServicesPage from "./pages/ServicesPage";
 import AboutPage from "./pages/AboutPage";
@@ -38,17 +38,26 @@ const queryClient = new QueryClient();
 const StatusBannerHost = () => {
   const { state } = useSupabaseData();
   console.log('StatusBannerHost - state:', state);
-  return <ServiceStatusBanner isOnline={!state.error} />;
+  return <ServiceStatusBanner errorMessage={state.error} />;
 };
 
 const OAuthEntryGate = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   try {
     const hash = window.location.hash || "";
+    const dismissed = localStorage.getItem("neatrix-welcome-dismissed") === "1";
     if (hash.includes("access_token") || hash.includes("refresh_token")) {
-      navigate("/welcome", { replace: true });
+      const raw = hash.startsWith('#') ? hash.slice(1) : hash;
+      const params = new URLSearchParams(raw);
+      const type = params.get('type');
+      const isAuthActionRoute = location.pathname === '/email-verification-success' || location.pathname === '/reset-password';
+      const isSupabaseAction = type === 'signup' || type === 'recovery';
+      if (!isAuthActionRoute && !isSupabaseAction) {
+        navigate(dismissed ? "/dashboard" : "/welcome", { replace: true });
+      }
     }
-  } catch {}
+  } catch { void 0 }
   return null;
 };
 

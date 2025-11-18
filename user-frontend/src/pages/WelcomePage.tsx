@@ -9,8 +9,13 @@ const WelcomePage = () => {
   const { state } = useSupabaseData();
 
   useEffect(() => {
+    const dismissed = localStorage.getItem("neatrix-welcome-dismissed") === "1";
     if (!state.isAuthenticated) {
       navigate("/login", { replace: true });
+      return;
+    }
+    if (dismissed) {
+      navigate("/dashboard", { replace: true });
     }
   }, [state.isAuthenticated, navigate]);
 
@@ -30,7 +35,7 @@ const WelcomePage = () => {
                 <h1 className="mt-4 text-3xl sm:text-4xl font-bold tracking-tight">{typeof name === "string" ? name : "Welcome"}</h1>
                 <p className="mt-3 text-sm sm:text-base text-white/90">Your Neatrix account is ready. Access bookings, delivery tracking, payments, and more.</p>
                 <div className="mt-6 flex gap-3">
-                  <button onClick={() => navigate("/dashboard", { replace: true })} className="inline-flex items-center justify-center rounded-lg bg-white text-purple-700 px-4 py-2 font-semibold hover:bg-white/90">
+                  <button onClick={() => { localStorage.setItem("neatrix-welcome-dismissed", "1"); navigate("/dashboard", { replace: true }); }} className="inline-flex items-center justify-center rounded-lg bg-white text-purple-700 px-4 py-2 font-semibold hover:bg-white/90">
                     Go to dashboard
                   </button>
                   <button onClick={() => navigate("/services")} className="inline-flex items-center justify-center rounded-lg bg-white/10 text-white px-4 py-2 font-semibold hover:bg-white/20">

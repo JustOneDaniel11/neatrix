@@ -1,18 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { CheckCircle, Mail, ArrowLeft, RefreshCw, MessageCircle, Phone } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { supabase } from '@/lib/supabase';
 
 const EmailVerificationPage = () => {
   const location = useLocation();
   const email = location.state?.email || '';
+  const [resendMessage, setResendMessage] = useState('');
+  const [resendError, setResendError] = useState('');
+  const [resending, setResending] = useState(false);
 
   const handleResendEmail = () => {
-    // This would trigger a resend email verification function
-    // For now, we'll show a simple alert
-    alert('Verification email sent! Please check your inbox.');
+    setResendMessage('');
+    setResendError('');
+    setResending(true);
+    supabase.auth
+      .resend({ type: 'signup', email })
+      .then(({ error }) => {
+        if (error) {
+          setResendError(error.message || 'Failed to resend verification email');
+        } else {
+          setResendMessage('Verification email sent. Please check your inbox.');
+        }
+      })
+      .catch(() => {
+        setResendError('Failed to resend verification email');
+      })
+      .finally(() => setResending(false));
   };
 
   const handleWhatsAppSupport = () => {
@@ -73,11 +90,18 @@ const EmailVerificationPage = () => {
               <div className="space-y-3">
                 <button
                   onClick={handleResendEmail}
-                  className="w-full flex items-center justify-center space-x-2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                  disabled={resending || !email}
+                  className="w-full flex items-center justify-center space-x-2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <RefreshCw className="w-4 h-4" />
-                  <span>Resend Verification Email</span>
+                  <span>{resending ? 'Resending...' : 'Resend Verification Email'}</span>
                 </button>
+                {resendMessage && (
+                  <div className="text-center text-sm text-green-700">{resendMessage}</div>
+                )}
+                {resendError && (
+                  <div className="text-center text-sm text-red-600">{resendError}</div>
+                )}
 
                 <Link
                   to="/login"
