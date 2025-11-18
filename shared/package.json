@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "vercel-build": "npm run build"
+    "vercel-build": "npm run build && echo 'Build completed successfully'"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
