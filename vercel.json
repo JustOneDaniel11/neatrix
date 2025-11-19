@@ -18,36 +18,28 @@
   ],
   "routes": [
     {
-      "src": "/admin-login",
-      "dest": "/admin-dashboard/dist/admin.html"
-    },
-    {
-      "src": "/reset-password",
-      "dest": "/admin-dashboard/dist/admin.html"
-    },
-    {
       "src": "/admin/assets/(.*)",
-      "dest": "/admin-dashboard/dist/assets/$1"
+      "dest": "/admin-dashboard/assets/$1"
     },
     {
       "src": "/assets/(.*)",
-      "dest": "/user-frontend/dist/assets/$1"
+      "dest": "/user-frontend/assets/$1"
     },
     {
       "src": "/(Neatrix_logo_transparent.png|Neatrix_logo_transparent_white.png|robots.txt|placeholder.svg)",
-      "dest": "/user-frontend/dist/$1"
+      "dest": "/user-frontend/$1"
     },
     {
       "src": "/images/(.*)",
-      "dest": "/user-frontend/dist/images/$1"
+      "dest": "/user-frontend/images/$1"
     },
     {
       "src": "/admin/.*",
-      "dest": "/admin-dashboard/dist/admin.html"
+      "dest": "/admin-dashboard/admin.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/user-frontend/dist/index.html"
+      "dest": "/user-frontend/index.html"
     }
   ]
 }

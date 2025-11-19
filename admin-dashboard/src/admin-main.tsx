@@ -71,10 +71,7 @@ ReactDOM.createRoot(root).render(
             <Routes>
               {/* Login routes - unprotected */}
               <Route path="/admin-login" element={<AdminLoginAdvanced />} />
-              {/* Support login under /admin for production rewrites */}
-              <Route path="/admin/admin-login" element={<AdminLoginAdvanced />} />
               <Route path="/reset-password" element={<AdminResetPassword />} />
-              <Route path="/admin/reset-password" element={<AdminResetPassword />} />
               
               {/* Protected routes nested under AdminLayout */}
               <Route element={<AuthGuard redirectTo="/admin-login"><AdminLayout /></AuthGuard>}>
