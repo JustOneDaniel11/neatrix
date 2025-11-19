@@ -50,8 +50,8 @@ const Index = () => {
           rel="preload"
           as="image"
           href="/images/hero-cleaning-1200.webp"
-          imagesrcset="/images/hero-cleaning-600.webp 600w, /images/hero-cleaning-900.webp 900w, /images/hero-cleaning-1200.webp 1200w"
-          imagesizes="(max-width: 1024px) 100vw, 1200px"
+          imageSrcSet="/images/hero-cleaning-600.webp 600w, /images/hero-cleaning-900.webp 900w, /images/hero-cleaning-1200.webp 1200w"
+          imageSizes="(max-width: 1024px) 100vw, 1200px"
         />
       </Helmet>
       {/* JSON-LD: Organization + Website + LocalBusiness */}
