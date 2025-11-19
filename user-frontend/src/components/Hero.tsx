@@ -86,16 +86,23 @@ const Hero = () => {
           {/* Right Image */}
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-strong">
-              <img 
-                src={heroImage} 
-                alt="Professional cleaning team at work" 
-                className="w-full h-[600px] object-cover"
-                width={1200}
-                height={600}
-                loading="eager"
-                decoding="async"
-                fetchpriority="high"
-              />
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet="/images/hero-cleaning-600.webp 600w, /images/hero-cleaning-900.webp 900w, /images/hero-cleaning-1200.webp 1200w"
+                  sizes="(max-width: 1024px) 100vw, 1200px"
+                />
+                <img
+                  src={heroImage}
+                  alt="Professional cleaning team at work"
+                  className="w-full h-[600px] object-cover"
+                  width={1200}
+                  height={600}
+                  loading="eager"
+                  decoding="async"
+                  sizes="(max-width: 1024px) 100vw, 1200px"
+                />
+              </picture>
               <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
             </div>
             

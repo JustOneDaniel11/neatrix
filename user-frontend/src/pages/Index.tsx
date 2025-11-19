@@ -1,13 +1,15 @@
 import Header from "../components/Header";
 import Hero from "../components/Hero";
-import Services from "../components/Services";
-import Testimonials from "../components/Testimonials";
-import Contact from "../components/Contact";
+import React, { Suspense } from "react";
+const Services = React.lazy(() => import("../components/Services"));
+const Testimonials = React.lazy(() => import("../components/Testimonials"));
+const Contact = React.lazy(() => import("../components/Contact"));
 import Footer from "../components/Footer";
 import { useSupabaseData } from "../contexts/SupabaseDataContext";
 import { FullScreenCleaningLoader } from "../components/ui/CleaningLoader";
 import { SEO } from "../components/SEO";
 import { StructuredData } from "../components/StructuredData";
+import { Helmet } from "react-helmet-async";
 
 const Index = () => {
   const { state } = useSupabaseData();
@@ -42,6 +44,16 @@ const Index = () => {
         pathname="/"
         image="https://neatrix.site/Neatrix_logo_transparent.png"
       />
+      {/* Preload hero image for faster LCP */}
+      <Helmet>
+        <link
+          rel="preload"
+          as="image"
+          href="/images/hero-cleaning-1200.webp"
+          imagesrcset="/images/hero-cleaning-600.webp 600w, /images/hero-cleaning-900.webp 900w, /images/hero-cleaning-1200.webp 1200w"
+          imagesizes="(max-width: 1024px) 100vw, 1200px"
+        />
+      </Helmet>
       {/* JSON-LD: Organization + Website + LocalBusiness */}
       <StructuredData
         data={[
@@ -88,9 +100,15 @@ const Index = () => {
           </p>
         </div>
       </section>
-      <Services />
-      <Testimonials />
-      <Contact />
+      <Suspense fallback={<div className="h-24" />}> 
+        <Services />
+      </Suspense>
+      <Suspense fallback={<div className="h-24" />}> 
+        <Testimonials />
+      </Suspense>
+      <Suspense fallback={<div className="h-24" />}> 
+        <Contact />
+      </Suspense>
       <Footer />
     </div>
   );
