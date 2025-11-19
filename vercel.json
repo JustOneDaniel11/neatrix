@@ -22,6 +22,10 @@
       "dest": "/admin-dashboard/assets/$1"
     },
     {
+      "src": "/admin/(IOS%20app%20menu-favicon-1024by1024-2.png|favicon.ico|robots.txt)",
+      "dest": "/admin-dashboard/$1"
+    },
+    {
       "src": "/admin$",
       "dest": "/admin-dashboard/admin.html"
     },
