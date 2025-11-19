@@ -3,6 +3,7 @@ import Services from "@/components/Services";
 import SubscriptionPlans from "@/components/SubscriptionPlans";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import { StructuredData } from "@/components/StructuredData";
 
 const ServicesPage = () => {
   return (
@@ -11,6 +12,34 @@ const ServicesPage = () => {
         title="Services"
         description="Explore Neatrix's residential, commercial, and school cleaning services with eco-friendly methods."
         pathname="/services"
+      />
+      <StructuredData
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: "Residential Cleaning",
+            provider: { "@type": "Organization", name: "Neatrix" },
+            areaServed: "Nigeria",
+            description: "Professional house cleaning and deep cleaning services.",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: "Commercial Cleaning",
+            provider: { "@type": "Organization", name: "Neatrix" },
+            areaServed: "Nigeria",
+            description: "Office and facility cleaning for businesses.",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: "School Cleaning",
+            provider: { "@type": "Organization", name: "Neatrix" },
+            areaServed: "Nigeria",
+            description: "Reliable cleaning services for schools and educational facilities.",
+          }
+        ]}
       />
       <Header />
       <main className="pt-20">

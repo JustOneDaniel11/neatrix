@@ -21,13 +21,11 @@ const Hero = () => {
               </div>
               
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                <span className="bg-gradient-hero bg-clip-text text-transparent">
-                  Sparkling Clean
-                </span>
+                <span className="text-foreground">Neatrix</span>
+                <span className="mx-2">—</span>
+                <span className="bg-gradient-hero bg-clip-text text-transparent">Sparkling Clean</span>
                 <br />
-                <span className="text-foreground">
-                  Spaces, Every Time
-                </span>
+                <span className="text-foreground">Spaces, Every Time</span>
               </h1>
               
               <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-lg">
@@ -92,6 +90,11 @@ const Hero = () => {
                 src={heroImage} 
                 alt="Professional cleaning team at work" 
                 className="w-full h-[600px] object-cover"
+                width={1200}
+                height={600}
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
             </div>

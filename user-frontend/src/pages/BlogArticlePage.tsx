@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, User, ArrowLeft } from "lucide-react";
 import { SEO } from "@/components/SEO";
+import { StructuredData } from "@/components/StructuredData";
 
 const BlogArticlePage = () => {
   const { slug } = useParams();
@@ -85,6 +86,19 @@ const BlogArticlePage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
+      <StructuredData
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt || (typeof post.content === 'string' ? post.content.slice(0, 160) : ""),
+          author: { "@type": "Person", name: post.author || "Neatrix" },
+          datePublished: new Date().toISOString(),
+          image: post.image || "https://neatrix.site/Neatrix_logo_transparent.png",
+          mainEntityOfPage: `https://neatrix.site/blog/${post.slug}`,
+          url: `https://neatrix.site/blog/${post.slug}`,
+        }}
+      />
       <SEO
         title={post.title}
         description={post.excerpt || `Read ${post.title} on the Neatrix blog.`}

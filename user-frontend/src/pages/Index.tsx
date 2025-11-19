@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import { useSupabaseData } from "../contexts/SupabaseDataContext";
 import { FullScreenCleaningLoader } from "../components/ui/CleaningLoader";
 import { SEO } from "../components/SEO";
+import { StructuredData } from "../components/StructuredData";
 
 const Index = () => {
   const { state } = useSupabaseData();
@@ -41,8 +42,52 @@ const Index = () => {
         pathname="/"
         image="https://neatrix.site/Neatrix_logo_transparent.png"
       />
+      {/* JSON-LD: Organization + Website + LocalBusiness */}
+      <StructuredData
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Neatrix",
+            url: "https://neatrix.site",
+            logo: "https://neatrix.site/Neatrix_logo_transparent.png",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Neatrix",
+            url: "https://neatrix.site",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: "https://neatrix.site/blog?q={search_term_string}",
+              "query-input": "required name=search_term_string",
+            },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            name: "Neatrix Cleaning Services",
+            url: "https://neatrix.site",
+            image: "https://neatrix.site/Neatrix_logo_transparent.png",
+            priceRange: "$$",
+            areaServed: "Nigeria",
+            telephone: "+2349034842430",
+          },
+        ]}
+      />
       <Header />
       <Hero />
+      {/* Brand paragraph with internal links to strengthen site structure */}
+      <section className="py-8">
+        <div className="container mx-auto px-4">
+          <p className="text-center text-muted-foreground max-w-3xl mx-auto">
+            Neatrix is your trusted partner for professional cleaning services. Explore our
+            <a href="/services" className="text-primary hover:text-primary/80 mx-1">services</a>,
+            get in touch via <a href="/contact" className="text-primary hover:text-primary/80">contact</a>,
+            and read expert tips on our <a href="/blog" className="text-primary hover:text-primary/80">blog</a>.
+          </p>
+        </div>
+      </section>
       <Services />
       <Testimonials />
       <Contact />
