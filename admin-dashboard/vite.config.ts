@@ -11,7 +11,8 @@ export default defineConfig(({ mode }) => ({
       "@shared": path.resolve(__dirname, "../shared"),
     },
   },
-  base: '/',
+  // Use '/admin' base in production so built HTML references '/admin/assets/...'
+  base: mode === 'production' ? '/admin' : '/',
   build: {
     // Increase chunk size warning limit to reduce noisy warnings on Vercel
     chunkSizeWarningLimit: 2000,

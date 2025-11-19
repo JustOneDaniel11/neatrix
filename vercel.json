@@ -19,7 +19,7 @@
   "routes": [
     {
       "src": "/admin/assets/(.*)",
-      "dest": "/admin-dashboard/assets/$1"
+      "dest": "/admin-dashboard/dist/assets/$1"
     },
     {
       "src": "/assets/(.*)",
@@ -35,11 +35,11 @@
     },
     {
       "src": "/admin/.*",
-      "dest": "/admin-dashboard/admin.html"
+      "dest": "/admin-dashboard/dist/admin.html"
     },
     {
       "src": "/admin-login",
-      "dest": "/admin-dashboard/admin.html"
+      "dest": "/admin-dashboard/dist/admin.html"
     },
     {
       "src": "/(.*)",
