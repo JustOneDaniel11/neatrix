@@ -6,6 +6,7 @@ import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 import { useSupabaseData } from "../contexts/SupabaseDataContext";
 import { FullScreenCleaningLoader } from "../components/ui/CleaningLoader";
+import { SEO } from "../components/SEO";
 
 const Index = () => {
   const { state } = useSupabaseData();
@@ -34,6 +35,12 @@ const Index = () => {
 
   return (
     <div>
+      <SEO
+        title="Home"
+        description="Professional cleaning services for homes, offices, and schools. Book Neatrix today."
+        pathname="/"
+        image="https://neatrix.site/Neatrix_logo_transparent.png"
+      />
       <Header />
       <Hero />
       <Services />

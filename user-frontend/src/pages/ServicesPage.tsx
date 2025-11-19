@@ -2,10 +2,16 @@ import Header from "@/components/Header";
 import Services from "@/components/Services";
 import SubscriptionPlans from "@/components/SubscriptionPlans";
 import Footer from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 
 const ServicesPage = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Services"
+        description="Explore Neatrix's residential, commercial, and school cleaning services with eco-friendly methods."
+        pathname="/services"
+      />
       <Header />
       <main className="pt-20">
         <div className="container mx-auto px-4 py-12">
