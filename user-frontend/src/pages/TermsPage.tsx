@@ -1,9 +1,16 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 
 const TermsPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="Terms of Service"
+        description="Neatrix Terms of Service covering bookings, payments, cancellations, and user responsibilities."
+        pathname="/terms"
+        keywords={["Neatrix terms", "terms of service", "cleaning service terms"]}
+      />
       <Header />
       <main className="container mx-auto px-4 pt-24 pb-24">
         <div className="max-w-3xl mx-auto">

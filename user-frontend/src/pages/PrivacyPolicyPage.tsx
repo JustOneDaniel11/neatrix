@@ -1,9 +1,16 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 
 const PrivacyPolicyPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="Privacy Policy"
+        description="Neatrix Privacy Policy detailing data collection, usage, retention, and user rights."
+        pathname="/privacy"
+        keywords={["Neatrix privacy", "privacy policy", "data protection"]}
+      />
       <Header />
       <main className="container mx-auto px-4 pt-24 pb-24">
         <div className="max-w-3xl mx-auto">

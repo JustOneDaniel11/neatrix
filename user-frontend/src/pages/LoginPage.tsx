@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 import { useSupabaseData } from "@/contexts/SupabaseDataContext";
 import { signInWithGoogle } from "@/lib/supabaseGoogleAuth";
 
@@ -71,6 +72,13 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Sign In"
+        description="Sign in to your Neatrix account to manage bookings, payments, and cleaning schedules."
+        pathname="/login"
+        robots="noindex, nofollow"
+        keywords={["Neatrix login", "account sign in", "cleaning service login"]}
+      />
       <Header />
       <main className="pt-16 pb-16 sm:pt-20 sm:pb-20">
         <div className="container mx-auto px-4">

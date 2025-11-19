@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import BookingSystem from "@/components/BookingSystem";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 
 const BookingPage = () => {
   const navigate = useNavigate();
@@ -14,6 +15,12 @@ const BookingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO
+        title="Book Service"
+        description="Book a Neatrix cleaning service for your home, office, or school with flexible scheduling."
+        pathname="/book-service"
+        keywords={["book cleaning", "Neatrix booking", "schedule cleaning"]}
+      />
       <Header />
       
       <div className="pt-20">

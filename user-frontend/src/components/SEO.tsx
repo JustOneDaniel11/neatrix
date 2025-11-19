@@ -6,6 +6,7 @@ type SEOProps = {
   pathname?: string;
   image?: string;
   robots?: string; // e.g., "index, follow" or "noindex, nofollow"
+  keywords?: string | string[]; // focus keyphrase/keywords
 };
 
 const SITE_URL = "https://neatrix.site";
@@ -13,17 +14,19 @@ const DEFAULT_TITLE = "Neatrix - Professional Cleaning Services";
 const DEFAULT_DESC = "Expert cleaning for homes, offices, and schools. Eco-friendly and professional.";
 const DEFAULT_IMAGE = `${SITE_URL}/Neatrix_logo_transparent.png`;
 
-export function SEO({ title, description, pathname = "", image, robots }: SEOProps) {
+export function SEO({ title, description, pathname = "", image, robots, keywords }: SEOProps) {
   const fullTitle = title ? `${title} | Neatrix` : DEFAULT_TITLE;
   const canonical = `${SITE_URL}${pathname.startsWith("/") ? pathname : `/${pathname}`}`;
   const ogImage = image || DEFAULT_IMAGE;
   const robotsContent = robots || "index, follow";
+  const keywordContent = Array.isArray(keywords) ? keywords.join(", ") : (keywords || "");
 
   return (
     <Helmet>
       <title>{fullTitle}</title>
       <meta name="description" content={description || DEFAULT_DESC} />
       <meta name="robots" content={robotsContent} />
+      {keywordContent && <meta name="keywords" content={keywordContent} />}
       <link rel="canonical" href={canonical} />
 
       {/* Open Graph */}

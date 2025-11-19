@@ -6,6 +6,7 @@ import { blogPosts as dataPosts } from "@/data/blogPosts";
 import { supabase } from "@/lib/supabase";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, User, ArrowLeft } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const BlogArticlePage = () => {
   const { slug } = useParams();
@@ -59,6 +60,12 @@ const BlogArticlePage = () => {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <Header />
+        <SEO
+          title="Article Not Found"
+          description="The blog article you’re looking for doesn’t exist or may have been moved."
+          pathname={`/blog/${slug || ""}`}
+          robots="noindex"
+        />
         <main className="container mx-auto px-4 pt-24 pb-24">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
@@ -78,6 +85,13 @@ const BlogArticlePage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
+      <SEO
+        title={post.title}
+        description={post.excerpt || `Read ${post.title} on the Neatrix blog.`}
+        pathname={`/blog/${post.slug}`}
+        image={post.image}
+        keywords={["Neatrix blog", post.title, "cleaning tips", "home care"]}
+      />
       <main className="container mx-auto px-4 pt-24 pb-24">
         <article className="max-w-3xl mx-auto">
           <Link to="/blog" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
