@@ -38,6 +38,10 @@
       "dest": "/admin-dashboard/admin.html"
     },
     {
+      "src": "/admin-login",
+      "dest": "/admin-dashboard/admin.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/user-frontend/index.html"
     }
