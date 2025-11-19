@@ -18,14 +18,6 @@
   ],
   "routes": [
     {
-      "src": "/admin-login",
-      "dest": "/admin-dashboard/admin.html"
-    },
-    {
-      "src": "/reset-password",
-      "dest": "/admin-dashboard/admin.html"
-    },
-    {
       "src": "/admin/assets/(.*)",
       "dest": "/admin-dashboard/assets/$1"
     },
