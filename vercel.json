@@ -30,45 +30,39 @@
       ]
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "handle": "filesystem"
+      "source": "/admin/assets/:path*",
+      "destination": "/admin-dashboard/assets/:path*"
     },
     {
-      "src": "/admin/assets/(.*)",
-      "dest": "/admin-dashboard/assets/$1"
+      "source": "/admin/IOS%20app%20menu-favicon-1024by1024-2.png",
+      "destination": "/admin-dashboard/IOS%20app%20menu-favicon-1024by1024-2.png"
     },
     {
-      "src": "/admin/(IOS%20app%20menu-favicon-1024by1024-2.png|favicon.ico|robots.txt)",
-      "dest": "/admin-dashboard/$1"
+      "source": "/admin/favicon.ico",
+      "destination": "/admin-dashboard/favicon.ico"
     },
     {
-      "src": "/admin$",
-      "dest": "/admin-dashboard/admin.html"
+      "source": "/admin/robots.txt",
+      "destination": "/admin-dashboard/robots.txt"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/user-frontend/assets/$1"
+      "source": "/admin",
+      "destination": "/admin-dashboard/admin.html"
     },
     {
-      "src": "/(Neatrix_logo_transparent.png|Neatrix_logo_transparent_white.png|robots.txt|sitemap.xml|placeholder.svg)",
-      "dest": "/$1"
+      "source": "/admin/:path*",
+      "destination": "/admin-dashboard/admin.html"
     },
     {
-      "src": "/images/(.*)",
-      "dest": "/images/$1"
+      "source": "/admin-login",
+      "destination": "/admin-dashboard/admin.html"
     },
     {
-      "src": "/admin/.*",
-      "dest": "/admin-dashboard/admin.html"
-    },
-    {
-      "src": "/admin-login",
-      "dest": "/admin-dashboard/admin.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/:path*",
+      "destination": "/index.html",
+      "missing": [ { "type": "filesystem" } ]
     }
   ]
 }
