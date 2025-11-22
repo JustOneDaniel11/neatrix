@@ -55,10 +55,6 @@
       "dest": "/user-frontend/$1"
     },
     {
-      "src": "/sitemap.xml",
-      "dest": "/user-frontend/sitemap.xml"
-    },
-    {
       "src": "/images/(.*)",
       "dest": "/user-frontend/images/$1"
     },
