@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node ./scripts/generate-sitemap.mjs",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
+    "generate:sitemap": "node ./scripts/generate-sitemap.mjs",
     "optimize:images": "node ./scripts/optimize-images.mjs",
     "lighthouse:home": "lighthouse http://localhost:5173/ --quiet --output html --output-path ./lighthouse-home.html --only-categories=performance,best-practices,seo",
     "lighthouse:services": "lighthouse http://localhost:5173/services --quiet --output html --output-path ./lighthouse-services.html --only-categories=performance,best-practices,seo"
