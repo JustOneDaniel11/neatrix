@@ -32,6 +32,10 @@
   ],
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "/user-frontend/sitemap.xml"
+    },
+    {
       "source": "/admin/assets/:path*",
       "destination": "/admin-dashboard/assets/:path*"
     },
