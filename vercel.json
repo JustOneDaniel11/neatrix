@@ -32,6 +32,9 @@
   ],
   "routes": [
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/admin/assets/(.*)",
       "dest": "/admin-dashboard/assets/$1"
     },
@@ -69,7 +72,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/user-frontend/index.html"
+      "dest": "/index.html"
     }
   ]
 }

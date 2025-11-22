@@ -25,13 +25,8 @@ const DashboardLayout = ({ children, activeTab, onTabChange }: DashboardLayoutPr
     ? "/Neatrix_logo_transparent_white.png" 
     : "/Neatrix_logo_transparent.png";
 
-  // On first dashboard visit, default to dark if no saved preference
-  useEffect(() => {
-    const saved = localStorage.getItem('darkMode');
-    if (saved === null) {
-      setDarkMode(true);
-    }
-  }, [setDarkMode]);
+  // Default theme is controlled by provider (light when no saved preference)
+  // Remove prior behavior that forced dark mode on first dashboard visit.
 
   // Apply/remove global dark class while on dashboard, and cleanup on unmount
   useEffect(() => {

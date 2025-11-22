@@ -24,6 +24,7 @@ import {
   LogOut
 } from "lucide-react";
 import { useSupabaseData, Address as SupabaseAddress } from "../../contexts/SupabaseDataContext";
+import { validateImage, compressImage } from "../../utils/compressImage";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
 
 // Using Address interface from SupabaseDataContext
@@ -57,7 +58,7 @@ interface Preferences {
 }
 
 const ProfileSettings = () => {
-  const { state, updateUser, createAddress, updateAddress, deleteAddress, signOut } = useSupabaseData();
+  const { state, updateUser, createAddress, updateAddress, deleteAddress, signOut, uploadUserPhoto, fetchCurrentUserPhotoUrl, removeCurrentUserPhoto } = useSupabaseData();
   const { currentUser } = state;
   const navigate = useNavigate();
   
@@ -72,6 +73,7 @@ const ProfileSettings = () => {
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState<SupabaseAddress | null>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [pendingPhotoFile, setPendingPhotoFile] = useState<File | null>(null);
 
   // User profile data from context
   const [userProfile, setUserProfile] = useState<UserProfile>({
@@ -96,6 +98,15 @@ const ProfileSettings = () => {
         profilePhoto: undefined,
         joinDate: currentUser.created_at
       });
+
+      // Load existing photo if available
+      fetchCurrentUserPhotoUrl(currentUser.id)
+        .then((url) => {
+          if (url) {
+            setUserProfile(prev => ({ ...prev, profilePhoto: url }));
+          }
+        })
+        .catch(() => {/* ignore */});
     }
   }, [currentUser]);
 
@@ -147,6 +158,11 @@ const ProfileSettings = () => {
           email: editedProfile.email,
           phone: editedProfile.phone
         });
+        if (pendingPhotoFile) {
+          const url = await uploadUserPhoto(pendingPhotoFile);
+          setUserProfile(prev => ({ ...prev, profilePhoto: url }));
+          setPendingPhotoFile(null);
+        }
         setIsEditing(false);
         setShowSuccessMessage(true);
         setTimeout(() => setShowSuccessMessage(false), 3000);
@@ -281,18 +297,41 @@ const ProfileSettings = () => {
     setTimeout(() => setShowSuccessMessage(false), 3000);
   };
 
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      // In a real app, you'd upload to your server/cloud storage
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setEditedProfile(prev => ({
-          ...prev,
-          profilePhoto: e.target?.result as string
-        }));
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const { valid, message } = validateImage(file, 10);
+    if (!valid) {
+      alert(message);
+      return;
+    }
+
+    try {
+      const compressed = await compressImage(file, { maxWidth: 1024, maxHeight: 1024, quality: 0.82 });
+      setPendingPhotoFile(compressed);
+      const previewUrl = URL.createObjectURL(compressed);
+      setEditedProfile(prev => ({ ...prev, profilePhoto: previewUrl }));
+    } catch (err) {
+      console.error('Image compression failed:', err);
+      alert('Failed to process image. Please try a different file.');
+    }
+  };
+
+  const handleRemovePhoto = async () => {
+    try {
+      if (currentUser && (userProfile.profilePhoto || editedProfile.profilePhoto)) {
+        // Clear local preview immediately
+        setEditedProfile(prev => ({ ...prev, profilePhoto: undefined }));
+        setUserProfile(prev => ({ ...prev, profilePhoto: undefined }));
+        setPendingPhotoFile(null);
+
+        // Persist removal in backend
+        await removeCurrentUserPhoto();
+      }
+    } catch (error) {
+      console.error('Error removing photo:', error);
+      alert('Failed to remove photo. Please try again.');
     }
   };
 
@@ -366,6 +405,15 @@ const ProfileSettings = () => {
                         className="hidden"
                       />
                     </label>
+                  )}
+                  {isEditing && (editedProfile.profilePhoto || userProfile.profilePhoto) && (
+                    <button
+                      type="button"
+                      onClick={handleRemovePhoto}
+                      className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs border border-gray-300 hover:bg-gray-200"
+                    >
+                      Remove Photo
+                    </button>
                   )}
                 </div>
                 <div className="text-center sm:text-left flex-1">

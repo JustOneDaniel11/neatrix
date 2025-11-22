@@ -928,6 +928,10 @@ const SupabaseDataContext = createContext<{
   createUserPaymentMethod: (method: Omit<UserPaymentMethod, 'id' | 'created_at' | 'updated_at'>) => Promise<void>;
   setDefaultPaymentMethod: (id: string) => Promise<void>;
   deleteUserPaymentMethod: (id: string) => Promise<void>;
+  // User photos
+  uploadUserPhoto: (file: File) => Promise<string>;
+  fetchCurrentUserPhotoUrl: (userId?: string) => Promise<string | null>;
+  removeCurrentUserPhoto: () => Promise<void>;
 } | null>(null);
 
 // Provider
@@ -2983,6 +2987,131 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const userPhotosPrivate = (import.meta as any)?.env?.VITE_USER_PHOTOS_PRIVATE === 'true';
+  const signedExpirySeconds = Number((import.meta as any)?.env?.VITE_USER_PHOTO_URL_EXPIRY || 3600);
+
+  // Upload user profile photo to Supabase Storage and record in user_photos
+  const uploadUserPhoto = async (file: File): Promise<string> => {
+    if (!state.authUser) throw new Error('Not authenticated');
+    const userId = state.authUser.id;
+    dispatch({ type: 'SET_LOADING', payload: true });
+
+    try {
+      const ext = file.name.split('.').pop() || 'jpg';
+      const path = `${userId}/${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('user-photos')
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (uploadError) throw uploadError;
+
+      let storedValue = path;
+      let returnUrl = '';
+      if (!userPhotosPrivate) {
+        const { data: publicData } = supabase.storage
+          .from('user-photos')
+          .getPublicUrl(path);
+        storedValue = publicData.publicUrl;
+        returnUrl = storedValue;
+      } else {
+        const { data: signed } = await supabase.storage
+          .from('user-photos')
+          .createSignedUrl(path, signedExpirySeconds);
+        returnUrl = signed?.signedUrl || '';
+      }
+
+      // Mark previous as not current
+      await supabase
+        .from('user_photos')
+        .update({ is_current: false })
+        .eq('user_id', userId)
+        .eq('is_current', true);
+
+      // Insert new current photo
+      const { error: insertError } = await supabase
+        .from('user_photos')
+        .insert({ user_id: userId, photo_url: storedValue, is_current: true });
+      if (insertError) throw insertError;
+      return returnUrl;
+    } catch (error: any) {
+      dispatch({ type: 'SET_ERROR', payload: error.message });
+      throw error;
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
+  };
+
+  // Fetch current user photo URL
+  const fetchCurrentUserPhotoUrl = async (userId?: string): Promise<string | null> => {
+    const id = userId || state.authUser?.id;
+    if (!id) return null;
+    try {
+      const { data, error } = await supabase
+        .from('user_photos')
+        .select('photo_url, uploaded_at')
+        .eq('user_id', id)
+        .eq('is_current', true)
+        .order('uploaded_at', { ascending: false })
+        .limit(1);
+      if (error) throw error;
+      if (!data || data.length === 0) return null;
+      const stored = (data[0] as any).photo_url as string;
+      if (!stored) return null;
+      if (!userPhotosPrivate) return stored;
+      // stored value is storage path when bucket is private
+      const { data: signed } = await supabase.storage
+        .from('user-photos')
+        .createSignedUrl(stored, signedExpirySeconds);
+      return signed?.signedUrl || null;
+    } catch (error: any) {
+      // Non-fatal: log and return null
+      console.warn('fetchCurrentUserPhotoUrl error:', error.message);
+      return null;
+    }
+  };
+
+  // Remove current user photo (unset is_current and try deleting the object)
+  const removeCurrentUserPhoto = async (): Promise<void> => {
+    if (!state.authUser) throw new Error('Not authenticated');
+    const userId = state.authUser.id;
+    dispatch({ type: 'SET_LOADING', payload: true });
+    try {
+      // Get current photo row
+      const { data, error } = await supabase
+        .from('user_photos')
+        .select('id, photo_url')
+        .eq('user_id', userId)
+        .eq('is_current', true)
+        .limit(1);
+      if (error) throw error;
+
+      // Unset current
+      await supabase
+        .from('user_photos')
+        .update({ is_current: false })
+        .eq('user_id', userId)
+        .eq('is_current', true);
+
+      // Try to delete storage object (best-effort)
+      if (data && data.length > 0) {
+        const stored = (data[0] as any).photo_url as string;
+        let path = stored;
+        if (!userPhotosPrivate) {
+          const match = stored.match(/\/user-photos\/(.*)$/);
+          if (match && match[1]) path = match[1];
+        }
+        if (path) {
+          await supabase.storage.from('user-photos').remove([path]);
+        }
+      }
+    } catch (err: any) {
+      // Non-fatal
+      console.warn('removeCurrentUserPhoto error:', err.message);
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
+  };
+
   return (
     <SupabaseDataContext.Provider value={{
       state,
@@ -3052,6 +3181,11 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       createUserPaymentMethod,
       setDefaultPaymentMethod,
       deleteUserPaymentMethod
+      ,
+      // User photos
+      uploadUserPhoto,
+      fetchCurrentUserPhotoUrl,
+      removeCurrentUserPhoto
     }}>
       {children}
     </SupabaseDataContext.Provider>
